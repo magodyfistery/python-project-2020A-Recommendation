@@ -1,17 +1,48 @@
 from flask import Flask, redirect, url_for, request, json, session
 from flask import render_template  # cargar html
 import matplotlib
-
-
+import pymysql
+from models.product import Product
 app = Flask(__name__)
 
 
 @app.route("/")
 def show_home():
     # user_data = json.loads(session['user_data'])
+    return render_template("module_home/index.html", logged_in=False, user="Magody", categories = get_categories(), prods = best_sellers())
 
-    return render_template("module_home/index.html", logged_in=False, user="Magody")
+############TEMPORAL##############
 
+
+def get_categories():
+    connection = pymysql.connect(host='localhost', user='root', password='', db='shop', charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
+    if connection:
+        cur = connection.cursor()
+        sql = "select category_name from category"
+        cur.execute(sql)
+        return cur.fetchall()
+
+    #for row in res:
+    #    	print(row["category_name"])
+
+def best_sellers():
+    connection = pymysql.connect(host='localhost', user='root', password='', db='shop', charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
+    if connection:
+        cur = connection.cursor()
+        fquery = "select id_product from order_details order by quantity desc limit 3"
+        cur.execute(fquery)
+        ids = cur.fetchall()
+        prods = []
+        for x in ids:
+            pquery = "select * from product where id_product="+str(x['id_product'])
+            cur.execute(pquery)
+            prod = cur.fetchone()
+            prods.append(Product(prod['id_product'],prod['id_category'],prod['product_name'],prod['price'],prod['img_path'],prod['avgrating']))
+        if prods:
+            return prods
+        else:
+            return None
+############TEMPORAL##############
 
 @app.route("/login")
 def login():

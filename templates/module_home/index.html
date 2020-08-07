@@ -7,6 +7,192 @@
 
 
 {% block content %}
-Mi contenido
+{% if not logged_in %}
+<!-- Html when not logged In -->
+<form class="form-inline active-pink-3 active-pink-4 justify-content-center mt-4 ">
+
+     <input class="form-control form-control-sm ml-3 w-50 mr-1" type="text" placeholder="What are you looking for?"
+       aria-label="Search">
+       <span><button class="btn btn-primary">Search</button></span>
+   </form>
+   <hr> 
+ 
+
+  <div class="container mb-5">
+      <h3 class="mb-2"><strong>Best Sellers</strong></h3>
+      <div class="row">
+
+        {% for x in prods %}
+        <div class ="col-sm">
+            <div class="shop-item">
+                <a href="#"><img width="223px" src="{{x.img_path}}"></a>
+                <div>
+                    {{x.name}}
+                </div>
+                <div>
+                    {{x.price}}
+                </div>
+                <div>
+                    {% for y in range(x.avgrating|int) %}
+                    <span class="fa fa-star checked text-warning"></span>
+                    {% endfor %}
+                    {%for z in range(5-(x.avgrating|int))%}
+                    <span class="fa fa-star"></span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div> 
+        {% endfor %}
+
+      </div>
+  </div>
+
+
+
+  <div class="container">
+    <h3 class="mb-2"><strong>Categories</strong></h3>
+    <div class="row">
+        {% for x in categories %}
+        <div class ="col-sm">
+            <div class="category-option">
+                <h5>
+                    {{ x['category_name'] }}
+                </h5>
+                <a href="#"><img width="223px" src="static/images/categories/{{x['category_name']}}.png"></a>
+            </div>
+        </div> 
+		{% endfor %}
+      </div>
+  </div>
+
+
+
+  
+  <div class="container mb-5">
+      <h3 class="mb-2"><strong>Top Rated</strong></h3>
+      <div class="row">
+        <div class ="col-md-4 col-sm-6 col-xs-12">
+            <div class="shop-item">
+                <a href="#"><img src="static/images/product1.png"></a>
+                <div>
+                    Product1
+                </div>
+                <div>
+                    $99.99
+                </div>
+                <div>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                </div>
+            </div>
+        </div> 
+        <div class ="col-md-4 col-sm-6 col-xs-12">
+            <div class="shop-item">
+                <a href="#"><img src="static/images/product1.png"></a>
+                <div>
+                    Product1
+                </div>
+                <div>
+                    $99.99
+                </div>
+                <div>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                </div>
+            </div>
+        </div> 
+        <div class ="col-md-4 col-sm-6 col-xs-12">
+            <div class="shop-item">
+                <a href="#"><img src="static/images/product1.png"></a>
+                <div>
+                    Product1
+                </div>
+                <div>
+                    $99.99
+                </div>
+                <div>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                </div>
+            </div>
+        </div> 
+        <div class ="col-md-4 col-sm-6 col-xs-12">
+            <div class="shop-item">
+                <a href="#"><img src="static/images/product1.png"></a>
+                <div>
+                    Product1
+                </div>
+                <div>
+                    $99.99
+                </div>
+                <div>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                </div>
+            </div>
+        </div> 
+        <div class ="col-md-4 col-sm-6 col-xs-12">
+            <div class="shop-item">
+                <a href="#"><img src="static/images/product1.png"></a>
+                <div>
+                    Product1
+                </div>
+                <div>
+                    $99.99
+                </div>
+                <div>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                </div>
+            </div>
+        </div> 
+        <div class ="col-md-4 col-sm-6 col-xs-12">
+            <div class="shop-item">
+                <a href="#"><img src="static/images/product1.png"></a>
+                <div>
+                    Product1
+                </div>
+                <div>
+                    $99.99
+                </div>
+                <div>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                    <span class="fa fa-star checked text-warning"></span>
+                </div>
+            </div>
+        </div> 
+      </div>
+  </div>
+
+
+
+
+
+
+
+  {% else %}
+  <!-- Html when logged In -->
+  <h1>Logged Home</h1>
+
+  {% endif %}
+  
 {% endblock %}
 
