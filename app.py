@@ -1,16 +1,23 @@
 from flask import Flask, redirect, url_for, request, json, session
 from flask import render_template  # cargar html
-import matplotlib
 
+from database import Database
+from models.category import Category
+from models.product import Product
 
+connection = Database.getConnection()
 app = Flask(__name__)
 
 
 @app.route("/")
 def show_home():
     # user_data = json.loads(session['user_data'])
-
-    return render_template("module_home/index.html", logged_in=False, user="Magody")
+    return render_template("module_home/index.html",
+                           logged_in=False,
+                           user="Magody",
+                           categories=Category.select_categories(connection),
+                           prods=Product.select_best_sellers(connection, 3)
+                           )
 
 
 @app.route("/login")
@@ -60,9 +67,6 @@ if __name__ == "__main__":
     app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
     app.debug = True  # detecta cambios
     app.run()
-
-
-
 
 
 
