@@ -25,12 +25,12 @@
         {% for x in prods %}
         <div class ="col-sm">
             <div class="shop-item">
-                <a href="#"><img width="223px" src="{{x.img_path}}"></a>
+                <a href="/product?view={{x.id_product}}"><img width="223px" src="{{x.img_path}}"></a>
                 <div>
-                    {{x.name}}
+                    <a href="/product?view={{x.id_product}}">{{x.name}}</a>
                 </div>
                 <div>
-                    {{x.price}}
+                    <a href="/product?view={{x.id_product}}">{{x.price}}</a>
                 </div>
                 <div>
                     {% for y in range(x.avgrating|int) %}
@@ -71,122 +71,29 @@
   <div class="container mb-5">
       <h3 class="mb-2"><strong>Top Rated</strong></h3>
       <div class="row">
+        {% for x in topr %}
         <div class ="col-md-4 col-sm-6 col-xs-12">
             <div class="shop-item">
-                <a href="#"><img src="static/images/product1.png"></a>
+                <a href="/product?view={{x.id_product}}"><img width="223px" src="{{x.img_path}}"></a>
                 <div>
-                    Product1
+                    <a href="/product?view={{x.id_product}}">{{x.name}}</a>
                 </div>
                 <div>
-                    $99.99
+                    <a href="/product?view={{x.id_product}}">{{x.price}}</a>
                 </div>
                 <div>
+                    {% for y in range(x.avgrating|int) %}
                     <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
+                    {% endfor %}
+                    {%for z in range(5-(x.avgrating|int))%}
+                    <span class="fa fa-star"></span>
+                    {% endfor %}
                 </div>
             </div>
         </div> 
-        <div class ="col-md-4 col-sm-6 col-xs-12">
-            <div class="shop-item">
-                <a href="#"><img src="static/images/product1.png"></a>
-                <div>
-                    Product1
-                </div>
-                <div>
-                    $99.99
-                </div>
-                <div>
-                    <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
-                </div>
-            </div>
-        </div> 
-        <div class ="col-md-4 col-sm-6 col-xs-12">
-            <div class="shop-item">
-                <a href="#"><img src="static/images/product1.png"></a>
-                <div>
-                    Product1
-                </div>
-                <div>
-                    $99.99
-                </div>
-                <div>
-                    <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
-                </div>
-            </div>
-        </div> 
-        <div class ="col-md-4 col-sm-6 col-xs-12">
-            <div class="shop-item">
-                <a href="#"><img src="static/images/product1.png"></a>
-                <div>
-                    Product1
-                </div>
-                <div>
-                    $99.99
-                </div>
-                <div>
-                    <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
-                </div>
-            </div>
-        </div> 
-        <div class ="col-md-4 col-sm-6 col-xs-12">
-            <div class="shop-item">
-                <a href="#"><img src="static/images/product1.png"></a>
-                <div>
-                    Product1
-                </div>
-                <div>
-                    $99.99
-                </div>
-                <div>
-                    <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
-                </div>
-            </div>
-        </div> 
-        <div class ="col-md-4 col-sm-6 col-xs-12">
-            <div class="shop-item">
-                <a href="#"><img src="static/images/product1.png"></a>
-                <div>
-                    Product1
-                </div>
-                <div>
-                    $99.99
-                </div>
-                <div>
-                    <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
-                    <span class="fa fa-star checked text-warning"></span>
-                </div>
-            </div>
-        </div> 
+        {% endfor %}
       </div>
   </div>
-
-
-
-
-
-
 
   {% else %}
   <!-- Html when logged In -->
