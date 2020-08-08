@@ -60,4 +60,3 @@ class User(Serializable):
         except Exception as e:
             print(__name__, "update: ", "ERROR: " + str(e))
             return False
-

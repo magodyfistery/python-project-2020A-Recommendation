@@ -1,9 +1,13 @@
-
-
 CREATE DATABASE shop;
 
 USE shop;
 
+CREATE TABLE category(
+    id_category int NOT NULL AUTO_INCREMENT,
+    category_name varchar(255),
+    info varchar(255),
+    PRIMARY KEY (id_category)
+);
 CREATE TABLE product (
     id_product int NOT NULL AUTO_INCREMENT,
     id_category int NOT NULL,
@@ -13,12 +17,6 @@ CREATE TABLE product (
     avgrating float(2,1),
     PRIMARY KEY (id_product),
     FOREIGN KEY (id_category) REFERENCES category(id_category)
-);
-CREATE TABLE category(
-    id_category int NOT NULL AUTO_INCREMENT,
-    category_name varchar(255),
-    info varchar(255),
-    PRIMARY KEY (id_category)
 );
 CREATE TABLE user(
     username varchar(30) NOT NULL,    
@@ -48,12 +46,10 @@ CREATE TABLE order_details(
 );
 
 -- orders.total -> calculado
--- best sellers: select id_product from order_details order by quantity desc limit 3;
-
 
 /*
 Cambios por: Danny Díaz el 07-08-2020
-Nota: corrección de integridad
+Nota: Corrección de integridad
 */
 ALTER TABLE `product` ENGINE = INNODB;
 ALTER TABLE `user` ENGINE = INNODB;
@@ -65,7 +61,10 @@ ALTER TABLE `order_details` ADD CONSTRAINT `fk_order_details_product` FOREIGN KE
 ALTER TABLE `order_details` ADD CONSTRAINT `fk_order_details_order` FOREIGN KEY (`id_order`) REFERENCES `orders`(`id_order`) ON DELETE RESTRICT ON UPDATE CASCADE;
 ALTER TABLE `orders` ADD CONSTRAINT `fk_orders_user` FOREIGN KEY (`username_user`) REFERENCES `user`(`username`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
-// cambio 2
+/*
+Cambios por: Danny Díaz el 07-08-2020
+Nota: Adición de tablas city y country con sus respectivos constraints. Adición del campo id_country en user con su constraint.
+*/
 CREATE TABLE `shop`.`country` ( `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , `name` VARCHAR(255) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
 CREATE TABLE `shop`.`city` ( `id_country` INT UNSIGNED NOT NULL , `name` VARCHAR(255) NOT NULL ) ENGINE = InnoDB;
 ALTER TABLE `city` ADD PRIMARY KEY(id_country, name);
@@ -73,16 +72,17 @@ ALTER TABLE `city` ADD INDEX(`id_country`);
 ALTER TABLE `city` ADD CONSTRAINT `fk_city_country` FOREIGN KEY (`id_country`) REFERENCES `country`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 ALTER TABLE `user` ADD `id_country` INT UNSIGNED NOT NULL AFTER `fullname`;
 
-
+UPDATE `user` SET `id_country` = '1' WHERE `user`.`username` = 'user1';
 
 ALTER TABLE `user` ADD INDEX(`id_country`);
 
-
+UPDATE `user` SET `city` = 'Quito' WHERE `user`.`username` = 'user1';
 
 ALTER TABLE `user` ADD INDEX(`city`);
 
 ALTER TABLE `user` CHANGE `city` `city` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
 
+ALTER TABLE `city` CHANGE `name` `name` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
 
 ALTER TABLE `user` ADD CONSTRAINT `fk_user_country_city` FOREIGN KEY (`id_country`, `city`) REFERENCES `city`(`id_country`, `name`) ON DELETE RESTRICT ON UPDATE CASCADE;
 

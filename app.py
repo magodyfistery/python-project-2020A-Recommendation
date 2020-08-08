@@ -7,6 +7,7 @@ from blueprints.blueprint_home import home_page
 from blueprints.blueprint_login import login_page
 from blueprints.blueprint_my_account import my_account_page
 from blueprints.blueprint_register import register_page
+from blueprints.blueprint_product import product
 from database import Database
 from models.city import City
 
@@ -19,6 +20,7 @@ app.register_blueprint(login_page)
 app.register_blueprint(register_page)
 app.register_blueprint(cart_page)
 app.register_blueprint(my_account_page)
+app.register_blueprint(product)
 
 
 @app.route('/api/get_cities')  # si se usa por más de un blueprint, debería estar en app.py
@@ -34,4 +36,3 @@ if __name__ == "__main__":
     app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
     app.debug = True  # detecta cambios
     app.run()
-

@@ -50,4 +50,3 @@ def update_user():
         flash("Exist a problem with the password")
 
     return redirect(url_for('.my_account_settings'))
-

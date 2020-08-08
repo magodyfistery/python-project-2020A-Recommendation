@@ -9,10 +9,3 @@ class OrderDetails(Serializable):
         self.id_product = id_product  # int
         self.quantity = quantity  # int
         self.subtotal = subtotal  # float(10, 2)
-
-
-
-
-
-
-

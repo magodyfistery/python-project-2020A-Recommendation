@@ -44,6 +44,3 @@ def save_user():
         flash("Password and confirmation password are diferent")
 
     return redirect(url_for('.register'))
-
-
-
