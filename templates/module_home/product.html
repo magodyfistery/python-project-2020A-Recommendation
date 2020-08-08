@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+<title> {{product.name}} </title>
+{% endblock %}
+
+{% block content %}
+
+<div class="container text-center">
+    <img class="mt-2" src={{product.img_path}}>
+    <div>
+    {{product.name}}
+    </div>
+    <div>
+    {{product.price}}
+    </div>
+    <div>
+        {% for y in range(product.avgrating|int) %}
+        <span class="fa fa-star checked text-warning"></span>
+        {% endfor %}
+        {%for z in range(5-(product.avgrating|int))%}
+        <span class="fa fa-star"></span>
+        {% endfor %}
+    </div>
+    <div></div>
+    {% if logged_in %}
+    <a href="#"><button class="btn btn-primary">Order Now!</button></a>
+    {% else %}
+    <a href="/login"><button class="btn btn-primary">Order Now!</button></a>
+    {% endif %}
+    </div>
+</div>
+
+<div class="container mb-5">
+    <h3 class="mb-2"><strong>Similar Products</strong></h3>
+    <div class="row">
+      {% for x in similar %}
+      <div class ="col-md-4 col-sm-6 col-xs-12">
+          <div class="shop-item">
+            <a href="/product?view={{x.id_product}}"><img width="223px" src="{{x.img_path}}"></a>
+            <div>
+                <a href="/product?view={{x.id_product}}">{{x.name}}</a>
+            </div>
+            <div>
+                <a href="/product?view={{x.id_product}}">{{x.price}}</a>
+            </div>
+            <div>
+                {% for y in range(x.avgrating|int) %}
+                <span class="fa fa-star checked text-warning"></span>
+                {% endfor %}
+                {%for z in range(5-(x.avgrating|int))%}
+                <span class="fa fa-star"></span>
+                {% endfor %}
+            </div>
+
+          </div>
+      </div> 
+      {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

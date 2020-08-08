@@ -20,3 +20,6 @@ class Database:
             )
 
         return Database.connection
+
+    def __del__(self):
+        Database.connection.close()

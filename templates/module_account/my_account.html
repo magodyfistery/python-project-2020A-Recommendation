@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+<title> My Account </title>
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/estilos.css') }}">
+{% endblock %}
+
+
+{% block content %}
+
+
+<div>
+    <div style="float: right; display: inline-block; margin-right: 50px;">
+        <h3>
+            <a href="/my_account/settings" class="text-grey" style="text-decoration: none;">
+                My settings
+            </a>
+        </h3>
+    </div>
+</div>
+
+<br>
+
+<div class="center">
+  <h2> <span> {{ user.fullname }} </span> </h2>
+</div>
+<br><br>
+
+
+
+
+
+
+
+{% endblock %}
