@@ -68,17 +68,16 @@ ALTER TABLE `orders` ADD CONSTRAINT `fk_orders_user` FOREIGN KEY (`username_user
 // cambio 2
 CREATE TABLE `shop`.`country` ( `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , `name` VARCHAR(255) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
 CREATE TABLE `shop`.`city` ( `id_country` INT UNSIGNED NOT NULL , `name` VARCHAR(255) NOT NULL ) ENGINE = InnoDB;
-ALTER TABLE `city` ADD PRIMARY KEY(id_country, name)
+ALTER TABLE `city` ADD PRIMARY KEY(id_country, name);
 ALTER TABLE `city` ADD INDEX(`id_country`);
 ALTER TABLE `city` ADD CONSTRAINT `fk_city_country` FOREIGN KEY (`id_country`) REFERENCES `country`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 ALTER TABLE `user` ADD `id_country` INT UNSIGNED NOT NULL AFTER `fullname`;
 
-UPDATE `user` SET `id_country` = '1' WHERE `user`.`username` = 'user1';
+
 
 ALTER TABLE `user` ADD INDEX(`id_country`);
 
 
-UPDATE `user` SET `city` = 'Quito' WHERE `user`.`username` = 'user1';
 
 ALTER TABLE `user` ADD INDEX(`city`);
 

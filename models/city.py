@@ -12,6 +12,7 @@ class City(Serializable):
         cursor = connection.cursor()
         sql = "SELECT name FROM city WHERE id_country={id_country}".format(id_country=id_country)
 
+
         try:
             cursor.execute(sql)
             cities = []
