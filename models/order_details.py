@@ -1,4 +1,7 @@
-class OrderDetails:
+from models.serializable import Serializable
+
+
+class OrderDetails(Serializable):
 
     def __init__(self, detail_number, id_order, id_product, quantity, subtotal):
         self.detail_number = detail_number  # int

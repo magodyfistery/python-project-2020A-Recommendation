@@ -1,4 +1,7 @@
-class Category:
+from models.serializable import Serializable
+
+
+class Category(Serializable):
 
     def __init__(self, id_category, category_name, info):
         self.id_category = id_category  # int

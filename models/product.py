@@ -1,4 +1,7 @@
-class Product:
+from models.serializable import Serializable
+
+
+class Product(Serializable):
     def __init__(self, id_product, id_category, name, price, img_path, avgrating):
         self.id_product = id_product  # int
         self.id_category = id_category  # int

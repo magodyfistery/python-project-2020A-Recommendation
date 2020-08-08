@@ -8,11 +8,143 @@
 
 
 {% block content %}
-<form action="/api/save_user" method="post">
-  <label for="name">Nombre: </label>
-  <input type="text" name="name" id="name" required> <br>
-  <input type="submit" value="Enviar">
-</form>
+
+<div class="center">
+  <h3> Welcome to RS E-SHOP </h3>
+  <h3> Please, complete the following form </h3>
+</div>
+<br><br>
+
+
+
+  <form action="/api/save_user" method="post">
+    <div class="form-eshop">
+      <br><br>
+      <div class="form-group">
+        <input class="form-control form-content-lg" type="text" name="name"
+        value="{{ user.fullname if user else '' }}" placeholder="Full name" required>
+      </div><br>
+
+      <div class="form-group">
+        <input class="form-control form-content-lg" type="email" name="email"
+        value="{{ user.email if user else '' }}" placeholder="E-mail" required>
+      </div><br>
+
+      <div class="form-group">
+        <select class="form-control" name="country" id="country" required>
+          <option value="-1">Select a country</option>
+          {% for country in countries %}
+            <option value="{{ country.id }}"
+                    {% if user %}
+                      {% if country.id == user.country_id %}
+                        selected
+                      {% endif %}
+                    {% endif %}
+            >
+              {{ country.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div><br>
+
+      <div class="form-group">
+        <select class="form-control" name="city" id="city" required>
+          {% if user %}
+            <option value="{{ user.city_name }}"> {{ user.city_name }} </option>
+          {% else %}
+            <option disabled> Select a country to get cities </option>
+          {% endif %}
+
+        </select>
+      </div><br>
+
+      <div class="form-group">
+        <input class="form-control form-content-lg" type="text" name="username"
+        value="{{ user.username if user else '' }}" placeholder="Username" required>
+      </div><br>
+
+
+      <div class="form-group">
+        <input class="form-control form-content-lg" type="password" name="password"
+        value="{{ user.passwd if user else '' }}" placeholder="Password" required>
+      </div><br>
+
+      <div class="form-group">
+        <input class="form-control form-content-lg" type="password" name="password_confirmation"
+        placeholder="Password confirmation" required>
+      </div>
+      <br><br>
+    </div>
+    <br><br>
+    <div class="center">
+      <button class="btn btn-primary" style="color: black;" type="submit">
+        Sign Me Up!
+      </button>
+    </div>
+
+    <br><br>
+    <p class="center text-grey">Already have an account? <a href="/login">Log in</a></p>
+    <br><br>
+  </form>
+
+
+
+  <script charset="utf-8" type="text/javascript">
+
+      $(function() {
+          var select_country = $('#country'),
+              select_city = $('#city');
+
+          select_country.on('change', function() {
+
+             if(select_country.val() == "-1"){
+              console.log("No selectable country")
+              select_city.empty();
+              var option = $('<option>', {
+                          text: 'Select a country to get cities'
+                      }, '</option>');
+              option.attr("disabled", true);
+              select_city.append(option)
+              return
+             }
+
+              var send = {
+                  id_country: select_country.val()
+              };
+
+              // make the selections disabled while fetching new data
+              select_country.attr('disabled', true);
+
+              $.getJSON("/api/get_cities", send, function(response) {
+                  // we will need to add a handler for this in Flask
+
+
+                  console.log("Respuesta recibida de: /api/get_cities", response);
+
+                  // populate
+
+
+                  select_city.empty();
+                  $.each(response.cities, function (index, value) {
+                      select_city.append(
+                      $('<option>', {
+                          value: value.name,
+                          text: value.name
+                      }, '</option>'))
+                  });
+
+
+                  select_country.removeAttr('disabled');
+              });
+
+          });
+
+
+
+      });
+  </script>
+
+
 {% endblock %}
 
 

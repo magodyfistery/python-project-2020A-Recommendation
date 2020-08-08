@@ -65,4 +65,26 @@ ALTER TABLE `order_details` ADD CONSTRAINT `fk_order_details_product` FOREIGN KE
 ALTER TABLE `order_details` ADD CONSTRAINT `fk_order_details_order` FOREIGN KEY (`id_order`) REFERENCES `orders`(`id_order`) ON DELETE RESTRICT ON UPDATE CASCADE;
 ALTER TABLE `orders` ADD CONSTRAINT `fk_orders_user` FOREIGN KEY (`username_user`) REFERENCES `user`(`username`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
+// cambio 2
+CREATE TABLE `shop`.`country` ( `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , `name` VARCHAR(255) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+CREATE TABLE `shop`.`city` ( `id_country` INT UNSIGNED NOT NULL , `name` VARCHAR(255) NOT NULL ) ENGINE = InnoDB;
+ALTER TABLE `city` ADD PRIMARY KEY(id_country, name)
+ALTER TABLE `city` ADD INDEX(`id_country`);
+ALTER TABLE `city` ADD CONSTRAINT `fk_city_country` FOREIGN KEY (`id_country`) REFERENCES `country`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `user` ADD `id_country` INT UNSIGNED NOT NULL AFTER `fullname`;
+
+UPDATE `user` SET `id_country` = '1' WHERE `user`.`username` = 'user1';
+
+ALTER TABLE `user` ADD INDEX(`id_country`);
+
+
+UPDATE `user` SET `city` = 'Quito' WHERE `user`.`username` = 'user1';
+
+ALTER TABLE `user` ADD INDEX(`city`);
+
+ALTER TABLE `user` CHANGE `city` `city` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+
+
+ALTER TABLE `user` ADD CONSTRAINT `fk_user_country_city` FOREIGN KEY (`id_country`, `city`) REFERENCES `city`(`id_country`, `name`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
 

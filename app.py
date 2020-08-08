@@ -1,9 +1,12 @@
-from flask import Flask, redirect, url_for, request, json, session
+from flask import Flask, redirect, url_for, request, json, session, flash, jsonify
 from flask import render_template  # cargar html
 
 from database import Database
 from models.category import Category
+from models.city import City
+from models.country import Country
 from models.product import Product
+from models.user import User
 
 connection = Database.getConnection()
 app = Flask(__name__)
@@ -11,7 +14,6 @@ app = Flask(__name__)
 
 @app.route("/")
 def show_home():
-    # user_data = json.loads(session['user_data'])
     return render_template("module_home/index.html",
                            logged_in=False,
                            user="Magody",
@@ -27,7 +29,12 @@ def login():
 
 @app.route("/register")
 def register():
-    return render_template("module_account/register.html")
+    user_data = session.get('user_data', None)  # de registro previo
+    print(user_data)
+    return render_template("module_account/register.html",
+                           countries=Country.select_countries(connection),
+                           user=json.loads(user_data) if user_data else None)
+
 
 
 @app.route("/my_cart")
@@ -52,14 +59,31 @@ def log_out():
 """API"""
 
 
-
-
 @app.route('/api/save_user', methods=['POST'])
 def parse_request():
     data = request.form
-    # TODO: GUARDAR DATOS
-    session['user_data'] = json.dumps({"name": data['name']})  # cookie de sesión
-    return redirect(url_for('.show_home'))
+
+    user = User(
+            data['username'], data['name'], int(data['country']),
+            data['city'], data['email'], data['password']
+        )
+
+    if data['password'] != data['password_confirmation']:
+        flash("Password and confirmation password are diferent")
+        session['user_data'] = user.toJSON()
+        return redirect(url_for('.register'))
+    else:
+        session['user_data'] = json.dumps({"user": user})  # cookie de sesión
+        return redirect(url_for('.show_home'))
+
+
+@app.route('/api/get_cities')
+def get_updated_settings():
+    # print(request.args)
+    id_country = request.args.get('id_country', 'default_if_none')
+    cities = City.select_cities_from_country(connection, id_country)
+    output = {'cities': [json.loads(city.toJSON()) for city in cities]}
+    return jsonify(output)
 
 
 # valida que corre por primera vez
