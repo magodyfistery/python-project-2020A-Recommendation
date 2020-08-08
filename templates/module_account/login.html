@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+<title> Login </title>
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/estilos.css') }}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="center">
+  <h3> Welcome Back </h3>
+</div>
+<br><br>
+
+
+
+  <form action="/api/auth_user" method="post">
+    <div class="form-eshop">
+      <br><br>
+
+
+      <div class="form-group">
+        <input class="form-control form-content-lg" type="text" name="username"
+        value="{{ user.username if user else '' }}" placeholder="Username" required>
+      </div><br>
+
+
+      <div class="form-group">
+        <input class="form-control form-content-lg" type="password" name="password"
+        placeholder="Password" required>
+      </div>
+
+      <br><br>
+    </div>
+    <br><br>
+    <div class="center">
+      <button class="btn btn-primary" style="color: black;" type="submit">
+        Log Me In!
+      </button>
+    </div>
+
+    <br><br>
+    <p class="center text-grey">You don't have an account? <a href="/register">Sign Up</a></p>
+    <br><br>
+  </form>
+
+
+
+
+{% endblock %}
+
+
+
