@@ -5,14 +5,14 @@ insert into category values (0,'Smartphones','This is about smartphones.');
 insert into category values (0,'Audio','This is about audio.');
 
 --------------------------PRODUCT---------------------------
-insert into product values (0,1,'Computer1',499.99,'static/images/computers/1.png',3.0);
-insert into product values (0,1,'Computer2',599.99,'static/images/computers/2.png',4.0);
-insert into product values (0,2,'Mouse1',29.99,'static/images/accesories/3.png',5.0);
-insert into product values (0,2,'Keyboard1',39.99,'static/images/accesories/4.png',2.0);
-insert into product values (0,3,'Smartphone1',199.99,'static/images/smartphones/5.png',3.0);
-insert into product values (0,3,'Smartphone2',159.99,'static/images/smartphones/6.png',5.0);
-insert into product values (0,1,'Computer3',699.99,'static/images/computers/7.png',4.0);
-insert into product values (0,1,'Computer4',799.99,'static/images/computers/8.png',3.0);
+insert into product values (0,1,'Computer1',499.99,'images/computers/1.png',3.0);
+insert into product values (0,1,'Computer2',599.99,'images/computers/2.png',4.0);
+insert into product values (0,2,'Mouse1',29.99,'images/accesories/3.png',5.0);
+insert into product values (0,2,'Keyboard1',39.99,'images/accesories/4.png',2.0);
+insert into product values (0,3,'Smartphone1',199.99,'images/smartphones/5.png',3.0);
+insert into product values (0,3,'Smartphone2',159.99,'images/smartphones/6.png',5.0);
+insert into product values (0,1,'Computer3',699.99,'images/computers/7.png',4.0);
+insert into product values (0,1,'Computer4',799.99,'images/computers/8.png',3.0);
 
 ---------------------------USER-------------------------
 insert into user values ('user1','FirstName SecondName',1, 'Quito', 'example@domain.com','123');

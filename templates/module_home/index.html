@@ -7,15 +7,15 @@
 
 
 {% block content %}
+<form action="/search" method="get" class="form-inline active-pink-3 active-pink-4 justify-content-center mt-4 ">
+    <input class="form-control form-control-sm ml-3 w-50 mr-1" type="text" placeholder="What are you looking for?"
+      aria-label="Search" name="q">
+      <span><button type="submit" class="btn btn-primary">Search</button></span>
+  </form>
+  <hr> 
 {% if not logged_in %}
 <!-- Html when not logged In -->
-<form class="form-inline active-pink-3 active-pink-4 justify-content-center mt-4 ">
-
-     <input class="form-control form-control-sm ml-3 w-50 mr-1" type="text" placeholder="What are you looking for?"
-       aria-label="Search">
-       <span><button class="btn btn-primary">Search</button></span>
-   </form>
-   <hr> 
+ 
  
 
   <div class="container mb-5">
@@ -25,7 +25,7 @@
         {% for x in prods %}
         <div class ="col-sm">
             <div class="shop-item">
-                <a href="/product?view={{x.id_product}}"><img width="223px" src="{{x.img_path}}"></a>
+                <a href="/product?view={{x.id_product}}"><img width="223px" src= {{ url_for('static', filename = '') }}{{x.img_path}}></a>
                 <div>
                     <a href="/product?view={{x.id_product}}">{{x.name}}</a>
                 </div>
@@ -58,7 +58,7 @@
                 <h5>
                     {{ x['category_name'] }}
                 </h5>
-                <a href="#"><img width="223px" src="static/images/categories/{{x['category_name']}}.png"></a>
+                <a href="/category/{{x['category_name']}}"><img width="223px" src="static/images/categories/{{x['category_name']}}.png"></a>
             </div>
         </div> 
 		{% endfor %}
@@ -74,7 +74,7 @@
         {% for x in topr %}
         <div class ="col-md-4 col-sm-6 col-xs-12">
             <div class="shop-item">
-                <a href="/product?view={{x.id_product}}"><img width="223px" src="{{x.img_path}}"></a>
+                <a href="/product?view={{x.id_product}}"><img width="223px" src= {{ url_for('static', filename = '') }}{{x.img_path}}></a>
                 <div>
                     <a href="/product?view={{x.id_product}}">{{x.name}}</a>
                 </div>

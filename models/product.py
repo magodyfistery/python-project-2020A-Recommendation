@@ -130,3 +130,24 @@ class Product(Serializable):
         except Exception as e:
             print(__name__, "query: " + str(e))
             return None
+    @staticmethod
+    def select_category_products(connection,id):
+        cursor = connection.cursor()
+        sql = "select * from product where id_category={id}".format(id=id)
+        try:
+            cursor.execute(sql)
+            products = []
+            fetch = cursor.fetchall()
+            for product in fetch:
+                products.append(Product(
+                    product['id_product'],
+                    product['id_category'],
+                    product['product_name'],
+                    product['price'],
+                    product['img_path'],
+                    product['avgrating'],
+                ))
+            return products
+        except Exception as e:
+            print(__name__, "query: " + str(e))
+            return None
