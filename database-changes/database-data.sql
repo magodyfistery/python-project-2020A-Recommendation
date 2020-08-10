@@ -21,6 +21,25 @@ insert into user values ('user1','FirstName SecondName',1, 'Quito', 'example@dom
 insert into orders values (0, 'user1', '2020-01-01 10:10:10', 0);
 insert into orders values (0, 'user1', '2020-01-01 11:11:11', 0);
 insert into orders values (0, 'user1', '2020-01-01 12:12:12', 0);
+insert into orders values (0,'user2','2020-02-02 10:10:10', 0);
+insert into orders values (0,'user2','2020-02-02 10:10:10', 0);
+insert into orders values (0,'user2','2020-02-02 10:10:10', 0);
+insert into orders values (0,'user3','2020-02-02 10:10:10', 0);
+insert into orders values (0,'user3','2020-02-02 10:10:10', 0);
+insert into orders values (0,'user3','2020-02-02 10:10:10', 0);
+-- Todos los productos adquiridos por un usuario
+-- select * from product where id_product in (select id_product from order_details where id_order in (select id_order from orders where username_user='user2') order by quantity desc);
+
+-- Todos los productos de un usuario agrupados  por cantidad
+-- select id_product, sum(quantity) from order_details where id_order in (select id_order from orders where username_user='user2') group by id_product order by sum(quantity) desc;
+
+-- Producto más comprado por un usuario
+-- select id_product, sum(quantity) from order_details where id_order in (select id_order from orders where username_user='user2') group by id_product order by sum(quantity) desc limit 1;
+
+-- Categoria del producto más comprado por un usuario
+-- R: no soportado en versión de mi base de datos.
+-- En mi caso, implementaré múltiples querys en el código de manera temporal.
+-- select * from category where id_category in (select id_category from product where id_product in (select id_product, sum(quantity) from order_details where id_order in (select id_order from orders where username_user='user2') group by id_product order by sum(quantity) desc limit 1));
 
 ---------------------------ORDER_DETAILS-------------------------
 insert into order_details values (0,1,1,10,3999.90);

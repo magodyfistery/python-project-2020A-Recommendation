@@ -36,7 +36,7 @@ class Product(Serializable):
                     product['img_path'],
                     product['avgrating'],
                 ))
-                print(product['product_name'])
+
 
             return products
         except Exception as e:

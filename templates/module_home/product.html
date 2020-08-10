@@ -25,13 +25,22 @@
     </div>
     <div></div>
     {% if logged_in %}
-    <a href="#"><button class="btn btn-primary">Order Now!</button></a>
+    <div>
+        <form action="/search" method="get" class="form-inline active-pink-3 active-pink-4 justify-content-center mt-4 ">
+            <input class="form-control form-control-sm ml-3 w-15 mr-1" type="text" placeholder="Quantity"
+              aria-label="Search" name="q">
+              <!--AGREGAR FUNCIONALIDAD 'AÑADIR A CARRITO'-->
+              <a href="#"><button class="btn btn-primary">Add to Cart!</button></a>
+          </form>
+    </div>
     {% else %}
     <a href="/login"><button class="btn btn-primary">Order Now!</button></a>
     {% endif %}
     </div>
 </div>
 
+
+{% if not logged_in %}
 <div class="container mb-5">
     <h3 class="mb-2"><strong>Similar Products</strong></h3>
     <div class="row">
@@ -59,5 +68,66 @@
       {% endfor %}
     </div>
 </div>
+{% else %}
+
+<!--Similar products personalized-recommendations-->
+<div class="container mb-5">
+    <h3 class="mb-2"><strong>Similar products for you</strong></h3>
+    <div class="row">
+      {% for x in recp %}
+      <div class ="col-md-4 col-sm-6 col-xs-12">
+          <div class="shop-item">
+              <a href="/product?view={{x.id_product}}"><img width="223px" src= {{ url_for('static', filename = '') }}{{x.img_path}}></a>
+              <div>
+                  <a href="/product?view={{x.id_product}}">{{x.name}}</a>
+              </div>
+              <div>
+                  <a href="/product?view={{x.id_product}}">{{x.price}}</a>
+              </div>
+              <div>
+                  {% for y in range(x.avgrating|int) %}
+                  <span class="fa fa-star checked text-warning"></span>
+                  {% endfor %}
+                  {%for z in range(5-(x.avgrating|int))%}
+                  <span class="fa fa-star"></span>
+                  {% endfor %}
+              </div>
+          </div>
+      </div> 
+      {% endfor %}
+    </div>
+</div>
+
+<!--Similar products group-based -->
+<div class="container mb-5">
+    <h3 class="mb-2"><strong>Similar products based on your location</strong></h3>
+    <div class="row">
+      {% for x in recg %}
+      <div class ="col-md-4 col-sm-6 col-xs-12">
+          <div class="shop-item">
+              <a href="/product?view={{x.id_product}}"><img width="223px" src= {{ url_for('static', filename = '') }}{{x.img_path}}></a>
+              <div>
+                  <a href="/product?view={{x.id_product}}">{{x.name}}</a>
+              </div>
+              <div>
+                  <a href="/product?view={{x.id_product}}">{{x.price}}</a>
+              </div>
+              <div>
+                  {% for y in range(x.avgrating|int) %}
+                  <span class="fa fa-star checked text-warning"></span>
+                  {% endfor %}
+                  {%for z in range(5-(x.avgrating|int))%}
+                  <span class="fa fa-star"></span>
+                  {% endfor %}
+              </div>
+          </div>
+      </div> 
+      {% endfor %}
+    </div>
+</div>
+
+{% endif %}
+
+
 
 {% endblock %}
