@@ -26,10 +26,10 @@
     <div></div>
     {% if logged_in %}
     <div>
-        <form action="/search" method="get" class="form-inline active-pink-3 active-pink-4 justify-content-center mt-4 ">
+        <form action="/my_cart" method="POST" class="form-inline active-pink-3 active-pink-4 justify-content-center mt-4 ">
+            <input type="hidden" name="product_id" value="{{product.id_product}}">
             <input class="form-control form-control-sm ml-3 w-15 mr-1" type="text" placeholder="Quantity"
-              aria-label="Search" name="q">
-              <!--AGREGAR FUNCIONALIDAD 'AÑADIR A CARRITO'-->
+              aria-label="Search" name="quantity" value = "1" min="1">
               <a href="#"><button class="btn btn-primary">Add to Cart!</button></a>
           </form>
     </div>

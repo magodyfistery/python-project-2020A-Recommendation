@@ -47,6 +47,7 @@ CREATE TABLE order_details(
 
 -- orders.total -> calculado
 
+
 /*
 Cambios por: Danny Díaz el 07-08-2020
 Nota: Corrección de integridad

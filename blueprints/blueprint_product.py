@@ -32,7 +32,23 @@ def get_product():
 def search_results():
     if 'q' in request.args:
         prods = Product.query(connection,request.args['q'],6)
-        return render_template("module_home/search.html", logged_in=False, prods= prods)
+        user_data = session.get('user_data', None)
+        logged_in = session.get('logged_in', False)
+        if logged_in:
+            recp = Product.select_best_sellers(connection, 6) # Recomendaciones personalizadas.
+            recg = Product.select_best_sellers(connection, 6) # Recomendaciones de grupo.
+            return render_template("module_home/search.html", 
+                                    logged_in=logged_in, 
+                                    prods= prods,
+                                    user=json.loads(user_data) if user_data else None,
+                                    recp=recp,
+                                    recg=recg
+                                    )
+        else:
+            return render_template("module_home/search.html", 
+                                    logged_in=logged_in, 
+                                    prods= prods,
+                                    )
 
 @product.route("/category/<name>")
 def select_category(name):
@@ -42,4 +58,8 @@ def select_category(name):
     for x in categories:
 	    if x.category_name == name:
 		    c = x
-    return render_template("module_home/category.html", logged_in=logged_in,categories=categories,user=json.loads(user_data) if user_data else None, c=c, prods = Product.select_category_products(connection,c.id_category))
+    return render_template("module_home/category.html",
+                            logged_in=logged_in,
+                            categories=categories,
+                            user=json.loads(user_data) if user_data else None,
+                            c=c, prods = Product.select_category_products(connection,c.id_category))

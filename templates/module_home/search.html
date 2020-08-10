@@ -11,7 +11,7 @@
       <span><button type="submit" class="btn btn-primary">Search</button></span>
   </form>
   <hr> 
-{% if not logged_in %}
+
 <div class="container mb-5">
     <h3 class="mb-2"><strong>Search Results</strong></h3>
     <div class="row">
@@ -38,8 +38,66 @@
       {% endfor %}
     </div>
 </div>
-{% else %}
 
+{% if logged_in %}
+
+<!-- Personalized Recommendations -->
+<div class="container mb-5">
+    <h3 class="mb-2"><strong>Recommended for you</strong></h3>
+    <div class="row">
+      {% for x in recp %}
+      <div class ="col-md-4 col-sm-6 col-xs-12">
+          <div class="shop-item">
+              <a href="/product?view={{x.id_product}}"><img width="223px" src= {{ url_for('static', filename = '') }}{{x.img_path}}></a>
+              <div>
+                  <a href="/product?view={{x.id_product}}">{{x.name}}</a>
+              </div>
+              <div>
+                  <a href="/product?view={{x.id_product}}">{{x.price}}</a>
+              </div>
+              <div>
+                  {% for y in range(x.avgrating|int) %}
+                  <span class="fa fa-star checked text-warning"></span>
+                  {% endfor %}
+                  {%for z in range(5-(x.avgrating|int))%}
+                  <span class="fa fa-star"></span>
+                  {% endfor %}
+              </div>
+          </div>
+      </div> 
+      {% endfor %}
+    </div>
+</div>
+
+
+<!-- Group Recommendations -->
+
+<div class="container mb-5">
+    <h3 class="mb-2"><strong>Based on your location</strong></h3>
+    <div class="row">
+      {% for x in recg %}
+      <div class ="col-md-4 col-sm-6 col-xs-12">
+          <div class="shop-item">
+              <a href="/product?view={{x.id_product}}"><img width="223px" src= {{ url_for('static', filename = '') }}{{x.img_path}}></a>
+              <div>
+                  <a href="/product?view={{x.id_product}}">{{x.name}}</a>
+              </div>
+              <div>
+                  <a href="/product?view={{x.id_product}}">{{x.price}}</a>
+              </div>
+              <div>
+                  {% for y in range(x.avgrating|int) %}
+                  <span class="fa fa-star checked text-warning"></span>
+                  {% endfor %}
+                  {%for z in range(5-(x.avgrating|int))%}
+                  <span class="fa fa-star"></span>
+                  {% endfor %}
+              </div>
+          </div>
+      </div> 
+      {% endfor %}
+    </div>
+</div>
 
 {% endif %}
 
