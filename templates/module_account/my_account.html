@@ -3,7 +3,9 @@
 
 {% block head %}
 <title> My Account </title>
-<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/estilos.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/estilos.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='rateYo/jquery.rateyo.min.css') }}">
+
 {% endblock %}
 
 
@@ -23,12 +25,50 @@
 <br>
 
 <div class="center">
-  <h2> <span> {{ user.fullname }} </span> </h2>
+    <h2> <span> {{ user.fullname }} </span> </h2>
 </div>
-<br><br>
+
+<div>
+    <div id="rateYo1" style="margin: 10px auto"></div>
+    <div class="counter" style="float: left;
+                          font-weight: bold;
+                          margin-left: 10px;
+                          margin-top: 7px;"></div>
+    <div style="clear: both"></div>
+  </div>
 
 
 
+<script type="text/javascript" src="{{ url_for('static',filename='rateYo/jquery.min.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static',filename='rateYo/jquery.rateyo.js')}}"></script>
+
+<script>
+    $(function () {
+
+        var rating = 0.8;
+
+        $(".counter").text(rating);
+
+        var changeRating = function (rating) {
+
+            $(this).next().text(rating);
+        };
+
+        $("#rateYo1").rateYo({
+            rating: rating,
+            numStars: 5,
+            precision: 2,
+            minValue: 0,
+            maxValue: 5
+        }).on("rateyo.change", function (e, data) {
+
+            changeRating.apply(this, [data.rating]);
+        }).on("rateyo.set", function (e, data) {
+
+            changeRating.apply(this, [data.rating]);
+        });
+    });
+</script>
 
 
 
