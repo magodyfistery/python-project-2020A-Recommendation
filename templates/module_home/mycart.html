@@ -23,14 +23,27 @@
             <td>{{product.quantity}}</td>
             <td>{{product.price}}</td>
             <td>{{product.total}}</td>
-            <td><button class="btn btn-danger text-center">Delete</button></td>
+            <form action="/mycart_pop" method="POST">
+                <input type="hidden" name="product_id" value="{{product.id_product}}">
+                <td><button class="btn btn-danger text-center">Delete</button></td>
+            </form>
         </tr>
         {% endfor %}
     </table>
     <hr>
 </div>
+
+{% if total %}
 <h1 class="text-center"><strong>Total</strong></h1>
 <h1 class="text-center">{{total}}</h1>
+<form action="/save_order" method="POST" class="text-center mb-4">
+    <input type="hidden" name="total" value="{{total}}">
+    <button class="btn btn-primary text-center">Order Now!</button>
+</form>
+{% endif %}
+
+
+
 {% else %}
 <h1 class="text-center">You have no products in your cart!</h1>
 {% endif %}

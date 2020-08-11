@@ -1,7 +1,10 @@
-from flask import Blueprint, session, render_template, request, redirect, flash
+from flask import Blueprint, session, render_template, request, redirect, flash, url_for
 from models.product import Product
 from models.cart import Cart
+from models.orders import Order
+from models.order_details import OrderDetails
 from database import Database
+from datetime import datetime
 import json
 
 connection = Database.getConnection()
@@ -44,8 +47,8 @@ def my_cart():
             return redirect(request.referrer)
     else:
         prods = []
-        if not 'mycart' in session:
-            return render_template("module_home/mycart.html",logged_in=logged_in,prods=prods,user=user)
+        if not 'mycart' in session or not username in session['mycart']:
+            return render_template("module_home/mycart.html",logged_in=logged_in,prods=prods,user=user,total=None)
         else:
             cart_products = session['mycart'][username]
             total = 0
@@ -54,3 +57,39 @@ def my_cart():
                     total = total + float(v['total'])
                     prods.append(Cart(k,v['name'],v['quantity'],v['price'],v['total']))
             return render_template("module_home/mycart.html",logged_in=logged_in,prods=prods,user=user, total=total)
+
+@cart_page.route("/mycart_pop", methods=["POST","GET"])
+def pop_product():
+    if request.method=="POST":
+        session.modified = True
+        user_data = session.get('user_data', None)
+        user=json.loads(user_data)
+        username = user['username']
+        id = request.form.get('product_id')
+        session['mycart'][username].pop(id)
+        return redirect(url_for(".my_cart"))
+
+@cart_page.route("/save_order", methods=["POST","GET"])
+def save_order():
+    user_data = session.get('user_data', None)
+    user=json.loads(user_data)
+    username = user['username']
+    prods = []
+    if request.method == "POST":
+        total  = request.form.get('total')
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
+        print(now)
+        if Order.insert_order(connection,Order(0,username,now,total)):
+            cart_products = session['mycart'][username]
+            if cart_products:
+                for k, v in cart_products.items():
+                    prods.append(Cart(k,v['name'],v['quantity'],v['price'],v['total']))
+                for prod in prods:
+                    OrderDetails.insert_order_details(connection,OrderDetails(0,0,prod.id_product,prod.quantity,prod.total))
+                flash('Compra registrada exitósamente!')
+                session.modified = True
+                session['mycart'].pop(username)
+                return redirect(url_for(".my_cart"))
+        else:
+            flash("Error guardando la compra, inténtelo más tarde.")
+            return redirect(request.referrer)
