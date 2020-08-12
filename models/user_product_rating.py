@@ -11,14 +11,22 @@ class UserProductRating(Serializable):
     @staticmethod
     def insert_product_notrated(connection, userproductrating):
         cursor = connection.cursor()
-        sql = "INSERT INTO user_product_rating VALUES ('{user}',{id_product},NULL,0)".format(user=userproductrating.username_user,id_product=userproductrating.id_product)
+        sql1 = "select * from user_product_rating where username_user='{user}' and id_product={id_product}".format(user=userproductrating.username_user,id_product=userproductrating.id_product)
         try:
-            cursor.execute(sql)
-            connection.commit()
-            return True
+            cursor.execute(sql1)
+            rating = cursor.fetchone()
+            if not rating:
+                sql2 = "INSERT INTO user_product_rating VALUES ('{user}',{id_product},NULL,0)".format(user=userproductrating.username_user,id_product=userproductrating.id_product)
+                try:
+                    cursor.execute(sql2)
+                    connection.commit()
+                    return True
+                except Exception as e:
+                    print(__name__, "insert_product_notrated: " + str(e))
+                    return None
         except Exception as e:
-            print(__name__, "insert_product_notrated: " + str(e))
-            return None
+                print(__name__, "insert_product_notrated: " + str(e))
+                return None
     @staticmethod
     def insert_product_rated(connection, userproductrating):
         cursor = connection.cursor()

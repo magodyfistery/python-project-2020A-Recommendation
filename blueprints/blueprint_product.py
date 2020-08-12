@@ -70,7 +70,11 @@ def save_rating():
     user=json.loads(user_data)
     username = user['username']
     if request.method == "POST":
-        print(type(request.json['pid']))
-        print(type(request.json['r']))
         done = UserProductRating.insert_product_rated(connection,UserProductRating(username,request.json['pid'],request.json['r'],0))
-        return jsonify({'res':done})
+        if done:
+            if Product.update_avg_rating(connection,request.json['pid']):
+                return jsonify({'res':True})
+            else:
+                return jsonify({'res':False})
+        else:
+            return jsonify({'res':done})

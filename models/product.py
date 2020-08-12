@@ -151,3 +151,22 @@ class Product(Serializable):
         except Exception as e:
             print(__name__, "query: " + str(e))
             return None
+    @staticmethod
+    def update_avg_rating(connection, pid):
+        cursor = connection.cursor()
+        sql1 = "select avg(rating) from user_product_rating where id_product={id_product} group by id_product".format(id_product=pid)
+        try:
+            cursor.execute(sql1)
+            rating = cursor.fetchone()
+            if rating['avg(rating)']:
+                sql2 = "update product set avgrating={avg} where id_product={id_product}".format(avg=rating['avg(rating)'],id_product=pid)
+                try:
+                    cursor.execute(sql2)
+                    connection.commit()
+                    return True
+                except Exception as e:
+                    print(__name__, "update_avg_rating: " + str(e))
+                    return False
+        except Exception as e:
+                print(__name__, "update_avg_rating: " + str(e))
+                return False

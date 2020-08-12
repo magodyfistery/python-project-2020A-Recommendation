@@ -5,14 +5,14 @@ insert into category values (0,'Smartphones','This is about smartphones.');
 insert into category values (0,'Audio','This is about audio.');
 
 --------------------------PRODUCT---------------------------
-insert into product values (0,1,'Computer1',499.99,'images/computers/1.png',3.0);
-insert into product values (0,1,'Computer2',599.99,'images/computers/2.png',4.0);
-insert into product values (0,2,'Mouse1',29.99,'images/accesories/3.png',5.0);
-insert into product values (0,2,'Keyboard1',39.99,'images/accesories/4.png',2.0);
-insert into product values (0,3,'Smartphone1',199.99,'images/smartphones/5.png',3.0);
-insert into product values (0,3,'Smartphone2',159.99,'images/smartphones/6.png',5.0);
-insert into product values (0,1,'Computer3',699.99,'images/computers/7.png',4.0);
-insert into product values (0,1,'Computer4',799.99,'images/computers/8.png',3.0);
+insert into product values (0,1,'Computer1',499.99,'images/computers/1.png',0);
+insert into product values (0,1,'Computer2',599.99,'images/computers/2.png',0);
+insert into product values (0,2,'Mouse1',29.99,'images/accesories/3.png',0);
+insert into product values (0,2,'Keyboard1',39.99,'images/accesories/4.png',0);
+insert into product values (0,3,'Smartphone1',199.99,'images/smartphones/5.png',0);
+insert into product values (0,3,'Smartphone2',159.99,'images/smartphones/6.png',0);
+insert into product values (0,1,'Computer3',699.99,'images/computers/7.png',0);
+insert into product values (0,1,'Computer4',799.99,'images/computers/8.png',0);
 
 ---------------------------USER-------------------------
 insert into user values ('user1','FirstName SecondName',1, 'Quito', 'example@domain.com','123');
@@ -49,6 +49,10 @@ insert into orders values (0,'user3','2020-02-02 10:10:10', 0);
 -- select orders.id_order, product.product_name, order_details.quantity, orders.order_date, order_details.subtotal from orders, product, order_details where orders.username_user='user1' and orders.id_order=order_details.id_order and order_details.id_product=product.id_product;
 --4-- Punto 3 con rating
 -- select product.id_product, orders.id_order, product.product_name, order_details.quantity, orders.order_date, order_details.subtotal, user_product_rating.rating from orders, product, order_details, user_product_rating where orders.username_user='user3' and orders.id_order=order_details.id_order and order_details.id_product=product.id_product and user_product_rating.username_user = 'user3' and user_product_rating.id_product=product.id_product group by product.product_name;
+--5-- rating average
+-- select avg(rating) from user_product_rating where id_product=12 group by id_product;
+--6-- update average
+-- update product set avgrating=3.00 where id_product=12;
 ---------------------------ORDER_DETAILS-------------------------
 insert into order_details values (0,1,1,10,3999.90);
 insert into order_details values (0,2,3,20,3999.90);
