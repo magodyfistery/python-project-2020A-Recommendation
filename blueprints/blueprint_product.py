@@ -1,10 +1,10 @@
 import json
 
-from flask import Blueprint, session, render_template, Flask, redirect, url_for, request, json
+from flask import Blueprint, session, render_template, Flask, redirect, url_for, request, json, jsonify
 from database import Database
 from models.product import Product
 from models.category import Category
-
+from models.user_product_rating import UserProductRating
 connection = Database.getConnection()
 product = Blueprint('product', __name__, template_folder='templates')
 
@@ -63,3 +63,14 @@ def select_category(name):
                             categories=categories,
                             user=json.loads(user_data) if user_data else None,
                             c=c, prods = Product.select_category_products(connection,c.id_category))
+
+@product.route("/rating", methods=["POST"])
+def save_rating():
+    user_data = session.get('user_data', None)
+    user=json.loads(user_data)
+    username = user['username']
+    if request.method == "POST":
+        print(type(request.json['pid']))
+        print(type(request.json['r']))
+        done = UserProductRating.insert_product_rated(connection,UserProductRating(username,request.json['pid'],request.json['r'],0))
+        return jsonify({'res':done})

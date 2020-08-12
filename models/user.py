@@ -51,7 +51,6 @@ class User(Serializable):
         cursor = connection.cursor()
         sql = "UPDATE user SET fullname='{0}', id_country={1}, city='{2}', email='{3}' WHERE username='{4}'"
         sql = sql.format(self.fullname, self.country_id, self.city_name, self.email,  self.username)
-
         try:
             cursor.execute(sql)
             connection.commit()

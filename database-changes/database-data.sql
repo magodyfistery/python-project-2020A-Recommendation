@@ -47,6 +47,8 @@ insert into orders values (0,'user3','2020-02-02 10:10:10', 0);
 -- select product_name from product where id_product in (select id_product from order_details where id_order in (select id_order from orders where username_user='user2'));
 --3-- Campos order_number,product_name,quantity,date,total de un usuario
 -- select orders.id_order, product.product_name, order_details.quantity, orders.order_date, order_details.subtotal from orders, product, order_details where orders.username_user='user1' and orders.id_order=order_details.id_order and order_details.id_product=product.id_product;
+--4-- Punto 3 con rating
+-- select product.id_product, orders.id_order, product.product_name, order_details.quantity, orders.order_date, order_details.subtotal, user_product_rating.rating from orders, product, order_details, user_product_rating where orders.username_user='user3' and orders.id_order=order_details.id_order and order_details.id_product=product.id_product and user_product_rating.username_user = 'user3' and user_product_rating.id_product=product.id_product group by product.product_name;
 ---------------------------ORDER_DETAILS-------------------------
 insert into order_details values (0,1,1,10,3999.90);
 insert into order_details values (0,2,3,20,3999.90);

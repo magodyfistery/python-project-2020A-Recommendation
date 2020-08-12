@@ -3,6 +3,7 @@ from models.product import Product
 from models.cart import Cart
 from models.orders import Order
 from models.order_details import OrderDetails
+from models.user_product_rating import UserProductRating
 from database import Database
 from datetime import datetime
 import json
@@ -86,6 +87,7 @@ def save_order():
                     prods.append(Cart(k,v['name'],v['quantity'],v['price'],v['total']))
                 for prod in prods:
                     OrderDetails.insert_order_details(connection,OrderDetails(0,0,prod.id_product,prod.quantity,prod.total))
+                    UserProductRating.insert_product_notrated(connection,UserProductRating(username,prod.id_product,0,0))
                 flash('Compra registrada exitósamente!')
                 session.modified = True
                 session['mycart'].pop(username)

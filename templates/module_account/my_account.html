@@ -5,13 +5,10 @@
 <title> My Account </title>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/estilos.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='rateYo/jquery.rateyo.min.css') }}">
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 {% endblock %}
 
-
 {% block content %}
-
-
 <div>
     <div style="float: right; display: inline-block; margin-right: 50px;">
         <h3>
@@ -21,31 +18,84 @@
         </h3>
     </div>
 </div>
-
 <br>
 
 <div class="center">
     <h2> <span> {{ user.fullname }} </span> </h2>
 </div>
 
-<div>
-    <div id="rateYo1" style="margin: 10px auto"></div>
-    <div class="counter" style="float: left;
-                          font-weight: bold;
-                          margin-left: 10px;
-                          margin-top: 7px;"></div>
-    <div style="clear: both"></div>
-  </div>
+{% if history %}
+<div class="container">
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th>Order Number</th>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Date</th>
+            <th>Total(USD)</th>
+            <th>Rate this product</th>
+        </tr>
+        {% for item in history%}
+        <tr>
+            <td>{{item.id_order}}</td>
+            <td>{{item.product_name}}</td>
+            <td>{{item.quantity}}</td>
+            <td>{{item.order_date}}</td>
+            <td>{{item.subtotal}}</td>
+            <div>
+                <td>
+                    {% if item.rating %}
+                    <div class="star-rating rateYo" data-rateyo-rating={{item.rating}} style="margin: 10px auto"
+                        onclick="inputs({{item.id_product}})"></div>
+                    {% else %}
+                    <div class="star-rating rateYo" data-rateyo-rating="0" style="margin: 10px auto"
+                        onclick="inputs({{item.id_product}})"></div>
+                    {% endif %}
+                    <p class="counter" id="{{item.id_product}}" hidden></p>
+                    <div style="clear: both"></div>
+                </td>
+            </div>
+        </tr>
+        {% endfor %}
+    </table>
+    <hr>
+</div>
+{% else %}
+<h1 class="text-center">You haven't bought anything yet!</h1>
+{% endif %}
 
-
+<script >
+    function inputs(product_id) {
+        var rat = document.getElementById(product_id).textContent;
+        var info = {
+            pid: product_id,
+            r: rat
+        }
+        $.ajax({
+            type: "POST",
+            url: '/rating',
+            dataType: "json",
+            data: JSON.stringify(info),
+            contentType: 'application/json;charset=UTF-8',
+            success: function (data) {
+                if (data.res==true){
+                    alert('Rating saved successfully!')
+                }else{
+                    alert('There was a problem saving the rating, try again later.')
+                }
+            }
+        });
+    }
+</script>
 
 <script type="text/javascript" src="{{ url_for('static',filename='rateYo/jquery.min.js')}}"></script>
 <script type="text/javascript" src="{{ url_for('static',filename='rateYo/jquery.rateyo.js')}}"></script>
 
 <script>
+    
     $(function () {
 
-        var rating = 0.8;
+        var rating = 0;
 
         $(".counter").text(rating);
 
@@ -54,7 +104,7 @@
             $(this).next().text(rating);
         };
 
-        $("#rateYo1").rateYo({
+        $('.rateYo').rateYo({
             rating: rating,
             numStars: 5,
             precision: 2,
@@ -68,9 +118,9 @@
             changeRating.apply(this, [data.rating]);
         });
     });
+
+    
 </script>
-
-
 
 
 {% endblock %}
