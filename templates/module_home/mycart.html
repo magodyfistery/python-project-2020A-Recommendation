@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title> My Cart </title>
+{% endblock %}
+
+{% block content %}
+<h1 class="text-center">My Cart</h1>
+{% if prods %}
+<div class="container">
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Remove Item</th>
+        </tr>
+        {% for product in prods %}
+        <tr>
+            <input type="hidden" name="product_id" value="{{product.id_product}}">
+            <td>{{product.product_name}}</td>
+            <td>{{product.quantity}}</td>
+            <td>{{product.price}}</td>
+            <td>{{product.total}}</td>
+            <form action="/mycart_pop" method="POST">
+                <input type="hidden" name="product_id" value="{{product.id_product}}">
+                <td><button class="btn btn-danger text-center">Delete</button></td>
+            </form>
+        </tr>
+        {% endfor %}
+    </table>
+    <hr>
+</div>
+
+{% if total %}
+<h1 class="text-center"><strong>Total</strong></h1>
+<h1 class="text-center">{{total}}</h1>
+<form action="/save_order" method="POST" class="text-center mb-4">
+    <input type="hidden" name="total" value="{{total}}">
+    <button class="btn btn-primary text-center">Order Now!</button>
+</form>
+{% endif %}
+
+
+
+{% else %}
+<h1 class="text-center">You have no products in your cart!</h1>
+{% endif %}
+
+{% endblock %}

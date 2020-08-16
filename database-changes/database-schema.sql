@@ -45,8 +45,6 @@ CREATE TABLE order_details(
     FOREIGN KEY (id_product) REFERENCES product(id_product)
 );
 
--- orders.total -> calculado
-
 /*
 Cambios por: Danny Díaz el 07-08-2020
 Nota: Corrección de integridad
@@ -86,4 +84,26 @@ ALTER TABLE `city` CHANGE `name` `name` VARCHAR(255) CHARACTER SET latin1 COLLAT
 
 ALTER TABLE `user` ADD CONSTRAINT `fk_user_country_city` FOREIGN KEY (`id_country`, `city`) REFERENCES `city`(`id_country`, `name`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
+/*Cambios por: Ronny Jaramillo 12-08-2020
+Nota: cambio nombre del campo 'status' a 'pstatus' 
+y del campo 'description' a 'pdescription' de la tabla 'processing_status'*/
+CREATE TABLE user_product_rating(
+    username_user varchar(30) NOT NULL,
+    id_product int NOT NULL,
+    rating float(3,2),
+    id_processing_status int,
+    FOREIGN KEY (username_user) REFERENCES user(username),
+    FOREIGN KEY (id_product) REFERENCES product(id_product),
+    FOREIGN KEY (id_processing_status) REFERENCES processing_status(id_processing_status)
+);
+ALTER TABLE `user_product_rating` ENGINE = INNODB;
+ALTER TABLE `user_product_rating` ADD CONSTRAINT `fk_rating_user` FOREIGN KEY (`username_user`) REFERENCES `user`(`username`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `user_product_rating` ADD CONSTRAINT `fk_rating_product` FOREIGN KEY (`id_product`) REFERENCES `product`(`id_product`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `user_product_rating` ADD CONSTRAINT `fk_rating_processing` FOREIGN KEY (`id_processing_status`) REFERENCES `processing_status`(`id_processing_status`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
+CREATE TABLE processing_status(
+    id_processing_status int,
+    pstatus varchar(256),
+    pdescription varchar(256)
+    PRIMARY KEY (id_processing_status)
+);

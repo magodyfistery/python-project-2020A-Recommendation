@@ -36,7 +36,7 @@ class Product(Serializable):
                     product['img_path'],
                     product['avgrating'],
                 ))
-                print(product['product_name'])
+
 
             return products
         except Exception as e:
@@ -130,3 +130,43 @@ class Product(Serializable):
         except Exception as e:
             print(__name__, "query: " + str(e))
             return None
+    @staticmethod
+    def select_category_products(connection,id):
+        cursor = connection.cursor()
+        sql = "select * from product where id_category={id}".format(id=id)
+        try:
+            cursor.execute(sql)
+            products = []
+            fetch = cursor.fetchall()
+            for product in fetch:
+                products.append(Product(
+                    product['id_product'],
+                    product['id_category'],
+                    product['product_name'],
+                    product['price'],
+                    product['img_path'],
+                    product['avgrating'],
+                ))
+            return products
+        except Exception as e:
+            print(__name__, "query: " + str(e))
+            return None
+    @staticmethod
+    def update_avg_rating(connection, pid):
+        cursor = connection.cursor()
+        sql1 = "select avg(rating) from user_product_rating where id_product={id_product} group by id_product".format(id_product=pid)
+        try:
+            cursor.execute(sql1)
+            rating = cursor.fetchone()
+            if rating['avg(rating)']:
+                sql2 = "update product set avgrating={avg} where id_product={id_product}".format(avg=rating['avg(rating)'],id_product=pid)
+                try:
+                    cursor.execute(sql2)
+                    connection.commit()
+                    return True
+                except Exception as e:
+                    print(__name__, "update_avg_rating: " + str(e))
+                    return False
+        except Exception as e:
+                print(__name__, "update_avg_rating: " + str(e))
+                return False
