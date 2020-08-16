@@ -10,7 +10,11 @@ from blueprints.blueprint_register import register_page
 from blueprints.blueprint_product import product
 from database import Database
 from models.city import City
-from recommendations import RecommendationCustomSystem
+from matrix_factorization_system.recommendations import user_recommendations
+
+import os
+import pickle
+from matrix_factorization_system.config import *
 
 connection = Database.getConnection()
 
@@ -22,6 +26,21 @@ app.register_blueprint(register_page)
 app.register_blueprint(cart_page)
 app.register_blueprint(my_account_page)
 app.register_blueprint(product)
+
+
+model = None
+id_items = None
+
+conf = Config()
+
+if os.path.isfile("./matrix_factorization_system/models/data.model"):  # si existe el modelo
+    print('Loading existing data for model')
+    file = open('matrix_factorization_system/models/data.model', 'rb')
+    conf = pickle.load(file)
+    file.close()
+
+    model = conf.cf_model
+    id_items = conf.id_items
 
 
 @app.route('/api/get_cities')  # si se usa por más de un blueprint, debería estar en app.py
@@ -42,7 +61,7 @@ def get_custom_recommendations():
     """
     Recibe un JSON con el usuario del que tomar recomendaciones y la cantidad de recomendaciones
     {
-        "user": "user1",
+        "user_id": 1,
         "quantity_recommendations": 10
     }
     :return: {
@@ -54,16 +73,21 @@ def get_custom_recommendations():
         }
     }
     """
-    user = request.json['user']
+    global model, id_items
+
+    user_id = request.json['user']
     quantity_recommendations = request.json['quantity_recommendations']
 
-    recommendations = RecommendationCustomSystem.get_recommendations(user, quantity_recommendations)
+    recommendations = []
+
+    if model is not None and id_items is not None:
+        recommendations = user_recommendations(model, id_items, user_id, "id", "id_product", k=quantity_recommendations)
 
     respuesta = {
         'error': "",
         "body": {
             "status": 999,
-            "msg": "Testeando %i recomendaciones para %s" % (quantity_recommendations, user),
+            "msg": "Testeando %i recomendaciones para el usuario con id %i" % (quantity_recommendations, user_id),
             "data": recommendations
         }
     }
