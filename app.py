@@ -10,6 +10,7 @@ from blueprints.blueprint_register import register_page
 from blueprints.blueprint_product import product
 from database import Database
 from models.city import City
+from recommendations import RecommendationCustomSystem
 
 connection = Database.getConnection()
 
@@ -30,6 +31,44 @@ def get_cities():
     cities = City.select_cities_from_country(connection, id_country)
     output = {'cities': [json.loads(city.toJSON()) for city in cities]}
     return jsonify(output)
+
+
+
+
+
+
+@app.route('/api/recommendations/by_custom', methods=['POST'])
+def get_custom_recommendations():
+    """
+    Recibe un JSON con el usuario del que tomar recomendaciones y la cantidad de recomendaciones
+    {
+        "user": "user1",
+        "quantity_recommendations": 10
+    }
+    :return: {
+        "error": "",
+        "body": {
+            "status": 1,
+            "msg": "Mensaje de servidor",
+            "data": []
+        }
+    }
+    """
+    user = request.json['user']
+    quantity_recommendations = request.json['quantity_recommendations']
+
+    recommendations = RecommendationCustomSystem.get_recommendations(user, quantity_recommendations)
+
+    respuesta = {
+        'error': "",
+        "body": {
+            "status": 999,
+            "msg": "Testeando %i recomendaciones para %s" % (quantity_recommendations, user),
+            "data": recommendations
+        }
+    }
+
+    return jsonify(respuesta)
 
 
 if __name__ == "__main__":

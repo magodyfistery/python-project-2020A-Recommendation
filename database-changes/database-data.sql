@@ -1,3 +1,10 @@
+El orden de ejecución importa, primero se crea el catálogo con id inicial igual a 1 (truncar la tabla si el id se genera automáticamente desde otro número)
+
+
+---------------------------PROCESSING_STATUS-------------------------
+INSERT INTO `processing_status` (`id_processing_status`, `pstatus`, `pdescription`) VALUES (NULL, 'PENDING', 'Requiere incorporación');
+
+
 ---------------------------CATEGORY-------------------------
 insert into category values (0,'Computers','This is about computers.');
 insert into category values (0,'Accesories','This is about accesories.');
@@ -14,8 +21,17 @@ insert into product values (0,3,'Smartphone2',159.99,'images/smartphones/6.png',
 insert into product values (0,1,'Computer3',699.99,'images/computers/7.png',0);
 insert into product values (0,1,'Computer4',799.99,'images/computers/8.png',0);
 
+---------------------------COUNTRY-------------------------
+INSERT INTO `country` (`id`, `name`) VALUES (NULL, 'Ecuador'), (NULL, 'United States');
+
+---------------------------CITY-------------------------
+INSERT INTO `city` (`id_country`, `name`) VALUES ('1', 'Quito'), ('1', 'Guayaquil');
+INSERT INTO `city` (`id_country`, `name`) VALUES ('2', 'Boston'), ('2', 'New York');
+
 ---------------------------USER-------------------------
-insert into user values ('user1','FirstName SecondName',1, 'Quito', 'example@domain.com','123');
+insert into user values ('user1','FirstName SecondName',1, 'Quito', 'example@domain.com','0a041b9462caa4a31bac3567e0b6e6fd9100787db2ab433d96f6d178cabfce90');
+insert into user values ('user2','FirstName SecondName',1, 'Quito', 'example2@domain.com','6025d18fe48abd45168528f18a82e265dd98d421a7084aa09f61b341703901a3');
+insert into user values ('user3','FirstName SecondName',1, 'Quito', 'example3@domain.com','5860faf02b6bc6222ba5aca523560f0e364ccd8b67bee486fe8bf7c01d492ccb');
 
 ---------------------------ORDERS-------------------------
 insert into orders values (0, 'user1', '2020-01-01 10:10:10', 0);
@@ -61,9 +77,8 @@ insert into order_details values (0,1,2,100,3999.90);
 insert into order_details values (0,2,4,5,3999.90);
 insert into order_details values (0,3,7,500,3999.90);
 
----------------------------COUNTRY-------------------------
-INSERT INTO `country` (`id`, `name`) VALUES (NULL, 'Ecuador'), (NULL, 'United States');
 
----------------------------CITY-------------------------
-INSERT INTO `city` (`id_country`, `name`) VALUES ('1', 'Quito'), ('1', 'Guayaquil');
-INSERT INTO `city` (`id_country`, `name`) VALUES ('2', 'Boston'), ('2', 'New York');
+
+
+---------------------------USER_PRODUCT_RATING-------------------------
+INSERT INTO `user_product_rating` (`username_user`, `id_product`, `rating`, `id_processing_status`) VALUES ('user1', '1', '5', '1'), ('user1', '7', '4', '1'), ('user1', '3', '2', '1'), ('user2', '5', '2', '1'), ('user2', '4', '5', '1'), ('user2', '6', '4', '1'), ('user3', '3', '3', '1'), ('user3', '5', '5', '1'), ('user3', '6', '5', '1')
