@@ -13,26 +13,9 @@ from matrix_factorization_system.CFModel import *
 from utils.console_functions import log
 from utils.pandas_utils import split_dataframe
 from utils.tf_utils import build_rating_sparse_tensor
-from config import Config
+from matrix_factorization_system.config import Config
 
 enable_eager_execution()
-
-# Hyperparameters
-embedding_dim = 25
-init_stddev = 1
-num_iterations = 700
-learning_rate = 0.03
-
-
-conf = Config()
-
-last_loss_result = math.inf
-
-if os.path.isfile(conf.model_path):  # si existe el modelo
-    print('Loading existing data for {} model'.format(conf.data_name))
-    with open(conf.model_path, 'rb') as handle:
-        last_loss_result = pickle.load(handle).cf_model.minimum_test_loss
-        print("Anterior costo mínimo ", last_loss_result)
 
 
 def build_model(ratings, users_count, items_count, embedding_dim=3, init_stddev=1.):
@@ -89,46 +72,69 @@ def build_model(ratings, users_count, items_count, embedding_dim=3, init_stddev=
 
 def save_model(model, ratings):
     print("Guardando nuevo modelo...")
+    global conf
     conf.cf_model = model
     conf.id_items = ratings["id_product"]
     conf.id_users = ratings["id"]
+    print(conf, type(conf))
     with open(conf.model_path, 'wb') as handle:
         pickle.dump(conf, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
+conf = Config()
 
-connection = Database.getConnection()
+def generateModel():
+    print("\n\n\nPRIMERA EJECUCION\n\n\n")
+    # Hyperparameters
+    embedding_dim = 25
+    init_stddev = 1
+    num_iterations = 700
+    learning_rate = 0.03
 
-sql = "SELECT u.id, r.id_product, r.rating FROM user_product_rating as r, user as u WHERE u.username = r.username_user AND id_processing_status=1"
 
-try:
-    ratings = pd.read_sql(sql, connection)
 
-    ratings["id_product"] = ratings["id_product"].apply(lambda x: str(x-1))
-    ratings["id"] = ratings["id"].apply(lambda x: str(x-1))  # se reduce para indexar más facilmente desde el 0
-    ratings["rating"] = ratings["rating"].apply(lambda x: float(x))
 
-    users_count = int(np.max(ratings['id'])) + 1  # se le redujo 1
-    items_count = int(np.max(ratings['id_product'])) + 1
+    last_loss_result = math.inf
 
-    # Build the CF model and train it.
-    Matrix_A_test, model = build_model(ratings, users_count, items_count, embedding_dim=embedding_dim, init_stddev=init_stddev)  # embedding_dim=30  num_iterations=1000
-    U, V = model.train(num_iterations=num_iterations, learning_rate=learning_rate)
+    if os.path.isfile(conf.model_path):  # si existe el modelo
+        print('Loading existing data for {} model'.format(conf.data_name))
+        with open(conf.model_path, 'rb') as handle:
+            last_loss_result = pickle.load(handle).cf_model.minimum_test_loss
+            print("Anterior costo mínimo ", last_loss_result)
 
-    # El error se mide con una matriz de test que no ha sido mostrada al modelo
-    cambiarMatrizReferencia(Matrix_A_test)
 
-    model.minimum_test_loss = sparse_mean_square_error(U, V)
-    log("test_loss final obtenido", model.minimum_test_loss)
+    connection = Database.getConnection()
 
-    if last_loss_result == math.inf:
-        save_model(model, ratings)
-    else:
-        if model.minimum_test_loss < last_loss_result:
-            print("El modelo mejoró por un ", ((last_loss_result-model.minimum_test_loss)*100)/last_loss_result, " % respecto al minimo inicial")
+    sql = "SELECT u.id, r.id_product, r.rating FROM user_product_rating as r, user as u WHERE u.username = r.username_user AND id_processing_status=1"
+
+    try:
+        ratings = pd.read_sql(sql, connection)
+
+        ratings["id_product"] = ratings["id_product"].apply(lambda x: str(x-1))
+        ratings["id"] = ratings["id"].apply(lambda x: str(x-1))  # se reduce para indexar más facilmente desde el 0
+        ratings["rating"] = ratings["rating"].apply(lambda x: float(x))
+
+        users_count = int(np.max(ratings['id'])) + 1  # se le redujo 1
+        items_count = int(np.max(ratings['id_product'])) + 1
+
+        # Build the CF model and train it.
+        Matrix_A_test, model = build_model(ratings, users_count, items_count, embedding_dim=embedding_dim, init_stddev=init_stddev)  # embedding_dim=30  num_iterations=1000
+        U, V = model.train(num_iterations=num_iterations, learning_rate=learning_rate)
+
+        # El error se mide con una matriz de test que no ha sido mostrada al modelo
+        cambiarMatrizReferencia(Matrix_A_test)
+
+        model.minimum_test_loss = sparse_mean_square_error(U, V)
+        log("test_loss final obtenido", model.minimum_test_loss)
+
+        if last_loss_result == math.inf:
             save_model(model, ratings)
         else:
-            print("El modelo empeoró un ", ((model.minimum_test_loss-last_loss_result)*100)/last_loss_result, " % respecto al minimo inicial")
+            if model.minimum_test_loss < last_loss_result:
+                print("El modelo mejoró por un ", ((last_loss_result-model.minimum_test_loss)*100)/last_loss_result, " % respecto al minimo inicial")
+                save_model(model, ratings)
+            else:
+                print("El modelo empeoró un ", ((model.minimum_test_loss-last_loss_result)*100)/last_loss_result, " % respecto al minimo inicial")
 
 
-except Exception as e:
-    raise e
+    except Exception as e:
+        raise e

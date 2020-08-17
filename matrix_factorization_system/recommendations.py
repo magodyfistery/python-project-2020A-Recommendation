@@ -2,11 +2,16 @@
 import pandas as pd
 from utils.similarity_measures import *
 from utils.console_functions import log
+import numpy as np
+import pickle
+import os
 
+from matrix_factorization_system.config import Config
 
-def user_recommendations(model, id_items, user_id, label_user_id, label_item_id, measure='score', exclude_rated=False, k=6):
+def user_recommendations(user_id, label_user_id, label_item_id, measure='score', exclude_rated=False, k=6):
 
     conf = Config()
+
 
     if os.path.isfile(conf.model_path):  # si existe el modelo
         print('Loading existing data for {} model'.format(conf.data_name))

@@ -1,3 +1,4 @@
+
 import json
 
 from flask import Flask, request, jsonify
@@ -11,12 +12,12 @@ from blueprints.blueprint_product import product
 from database import Database
 from models.city import City
 from matrix_factorization_system.recommendations import user_recommendations
+from matrix_factorization_system.build_model import generateModel
 
-import os
-import pickle
-from matrix_factorization_system.config import *
+
 
 connection = Database.getConnection()
+
 
 app = Flask(__name__)
 # forma de dividir la aplicación en partes
@@ -31,16 +32,7 @@ app.register_blueprint(product)
 model = None
 id_items = None
 
-conf = Config()
 
-if os.path.isfile("./matrix_factorization_system/models/data.model"):  # si existe el modelo
-    print('Loading existing data for model')
-    file = open('matrix_factorization_system/models/data.model', 'rb')
-    conf = pickle.load(file)
-    file.close()
-
-    model = conf.cf_model
-    id_items = conf.id_items
 
 
 @app.route('/api/get_cities')  # si se usa por más de un blueprint, debería estar en app.py
@@ -78,24 +70,32 @@ def get_custom_recommendations():
     user_id = request.json['user']
     quantity_recommendations = request.json['quantity_recommendations']
 
-    recommendations = []
+    recommendations = user_recommendations(user_id, "id", "id_product", k=quantity_recommendations)
 
-    if model is not None and id_items is not None:
-        recommendations = user_recommendations(model, id_items, user_id, "id", "id_product", k=quantity_recommendations)
+    arreglo = []
+    for id in recommendations:
+        arreglo.append(int(id))
+
+    print(arreglo)
 
     respuesta = {
         'error': "",
         "body": {
             "status": 999,
             "msg": "Testeando %i recomendaciones para el usuario con id %i" % (quantity_recommendations, user_id),
-            "data": recommendations
+            "data": arreglo
         }
     }
 
+
+
     return jsonify(respuesta)
 
-
 if __name__ == "__main__":
+    # generateModel()
+
     app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
     app.debug = True  # detecta cambios
     app.run()
+
+

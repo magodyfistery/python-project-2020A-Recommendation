@@ -156,7 +156,7 @@ ALTER TABLE `processing_status` ADD PRIMARY KEY(id_processing_status);
 ALTER TABLE `processing_status` ENGINE = INNODB;
 ALTER TABLE `processing_status` CHANGE `id_processing_status` `id_processing_status` INT(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `user_product_rating` ADD CONSTRAINT `fk_rating_processing` FOREIGN KEY (`id_processing_status`) REFERENCES `processing_status`(`id_processing_status`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
+//////// fin de correcciones de claves PK y FK  //////
 
 
 ALTER TABLE `user` ADD `id` INT UNSIGNED NOT NULL AUTO_INCREMENT FIRST, ADD UNIQUE (`id`);
