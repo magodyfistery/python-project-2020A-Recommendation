@@ -1,5 +1,7 @@
 
+
 import json
+from time import sleep
 
 from flask import Flask, request, jsonify
 
@@ -11,8 +13,13 @@ from blueprints.blueprint_register import register_page
 from blueprints.blueprint_product import product
 from database import Database
 from models.city import City
-from matrix_factorization_system.recommendations import user_recommendations
+from matrix_factorization_system.recommendations import user_candidate_generation, get_total_sources, \
+    get_sparse_matrix_ratings
 from matrix_factorization_system.build_model import generateModel
+
+import threading
+
+
 
 
 
@@ -46,7 +53,7 @@ def get_cities():
 
 
 
-
+# matrix = get_sparse_matrix_ratings() # matrix de ratings sin ser convertida atensor
 
 @app.route('/api/recommendations/by_custom', methods=['POST'])
 def get_custom_recommendations():
@@ -70,20 +77,20 @@ def get_custom_recommendations():
     user_id = request.json['user']
     quantity_recommendations = request.json['quantity_recommendations']
 
-    recommendations = user_recommendations(user_id, "id", "id_product", k=quantity_recommendations)
+    with_rated = False
+    candidate_generation = user_candidate_generation(user_id, "id", "id_product")
+    total_sources = get_total_sources(candidate_generation, user_id, with_rated=with_rated, verbosity=0)
+    recommendations = list(total_sources.index)[0:quantity_recommendations]  # ya viene ordenado con prioridad
 
-    arreglo = []
-    for id in recommendations:
-        arreglo.append(int(id))
 
-    print(arreglo)
+
 
     respuesta = {
         'error': "",
         "body": {
             "status": 999,
             "msg": "Testeando %i recomendaciones para el usuario con id %i" % (quantity_recommendations, user_id),
-            "data": arreglo
+            "data": recommendations
         }
     }
 
@@ -91,11 +98,31 @@ def get_custom_recommendations():
 
     return jsonify(respuesta)
 
+
+def model_updater():
+    global keep_training
+
+    while keep_training:
+        generateModel(
+            embedding_dim=30,
+            init_stddev=1,
+            num_iterations=500,
+            learning_rate=0.03,
+            verbosity=0
+        )
+
+        sleep(1200)  # cada 20 minutos
+
+
 if __name__ == "__main__":
-    # generateModel()
+
+    print("Iniciando programa")
+    keep_training = True
+
+    threading.Thread(target=model_updater).start()
 
     app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-    app.debug = True  # detecta cambios
-    app.run()
+    # app.debug = True  # detecta cambios
+    app.run(debug=True, use_reloader=False)
 
 

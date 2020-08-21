@@ -46,7 +46,7 @@ class CFModel(object):
     return self._embeddings
 
   def train(self, num_iterations=100, learning_rate=1.0, plot_results=True,
-            optimizer=tf.keras.optimizers.SGD):  # tf.keras.optimizers.SGD() tensorflow 2 = tf.train.GradientDescentOptimizer  tensorflow 1
+            optimizer=tf.keras.optimizers.SGD, verbosity=1):  # tf.keras.optimizers.SGD() tensorflow 2 = tf.train.GradientDescentOptimizer  tensorflow 1
     """Trains the model.
     Args:
       iterations: number of iterations to run.
@@ -70,7 +70,7 @@ class CFModel(object):
     # Train and append results.
     for i in tqdm(range(num_iterations + 1)):  # tqdm(range(num_iterations + 1))
         opt.minimize(loss_fn, var_list)
-        if i % 100 == 0 or i == num_iterations:
+        if (i % 100 == 0 or i == num_iterations) and verbosity == 1:
             log("Training error in iteration %i" % i, sparse_mean_square_error(U, V))
 
     for k, v in self._embedding_vars.items():
