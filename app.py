@@ -13,20 +13,21 @@ from blueprints.blueprint_register import register_page
 from blueprints.blueprint_product import product
 from database import Database
 from models.city import City
-from matrix_factorization_system.recommendations import user_candidate_generation, get_total_sources, \
-    get_sparse_matrix_ratings
+from matrix_factorization_system.recommendations import user_candidate_generation, get_total_sources
 from matrix_factorization_system.build_model import generateModel
-
+from blueprints.blueprint_admin import admin_page
 import threading
 
-
-
-
+from parameters import Parameters
 
 connection = Database.getConnection()
 
 
+
+
+
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = Parameters.UPLOAD_FOLDER
 # forma de dividir la aplicación en partes
 app.register_blueprint(home_page)
 app.register_blueprint(login_page)
@@ -34,7 +35,7 @@ app.register_blueprint(register_page)
 app.register_blueprint(cart_page)
 app.register_blueprint(my_account_page)
 app.register_blueprint(product)
-
+app.register_blueprint(admin_page)
 
 model = None
 id_items = None
@@ -117,7 +118,7 @@ def model_updater():
 if __name__ == "__main__":
 
     print("Iniciando programa")
-    keep_training = True
+    keep_training = False
 
     threading.Thread(target=model_updater).start()
 

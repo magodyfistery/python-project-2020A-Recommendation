@@ -170,3 +170,26 @@ class Product(Serializable):
         except Exception as e:
                 print(__name__, "update_avg_rating: " + str(e))
                 return False
+
+    @staticmethod
+    def select_products(connection, skip, step):
+        cursor = connection.cursor()
+        sql = "SELECT * FROM product LIMIT {skip}, {step}".format(skip=skip, step=step)
+        try:
+            cursor.execute(sql)
+            products = []
+            fetch = cursor.fetchall()
+            for product in fetch:
+                products.append(Product(
+                    product['id_product'],
+                    product['id_category'],
+                    product['product_name'],
+                    product['price'],
+                    product['img_path'],
+                    product['avgrating'],
+                ))
+            return products
+        except Exception as e:
+            print(__name__, "query: " + str(e))
+            return []
+

@@ -28,10 +28,18 @@ INSERT INTO `country` (`id`, `name`) VALUES (NULL, 'Ecuador'), (NULL, 'United St
 INSERT INTO `city` (`id_country`, `name`) VALUES ('1', 'Quito'), ('1', 'Guayaquil');
 INSERT INTO `city` (`id_country`, `name`) VALUES ('2', 'Boston'), ('2', 'New York');
 
+
+---------------------------ROLE-------------------------
+INSERT INTO `role` (`id`, `name`) VALUES (NULL, 'ADMIN'), (NULL, 'EMPLOYEE')
+
 ---------------------------USER-------------------------
 insert into user values ('user1','FirstName SecondName',1, 'Quito', 'example@domain.com','0a041b9462caa4a31bac3567e0b6e6fd9100787db2ab433d96f6d178cabfce90');
 insert into user values ('user2','FirstName SecondName',1, 'Quito', 'example2@domain.com','6025d18fe48abd45168528f18a82e265dd98d421a7084aa09f61b341703901a3');
 insert into user values ('user3','FirstName SecondName',1, 'Quito', 'example3@domain.com','5860faf02b6bc6222ba5aca523560f0e364ccd8b67bee486fe8bf7c01d492ccb');
+
+---------------------------USER_ROLE-------------------------
+INSERT INTO `user_role` (`id_role`, `username_user`) VALUES ('1', 'user1'), ('2', 'user2')
+
 
 ---------------------------ORDERS-------------------------
 insert into orders values (0, 'user1', '2020-01-01 10:10:10', 0);

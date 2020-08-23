@@ -160,3 +160,17 @@ ALTER TABLE `user_product_rating` ADD CONSTRAINT `fk_rating_processing` FOREIGN 
 
 
 ALTER TABLE `user` ADD `id` INT UNSIGNED NOT NULL AUTO_INCREMENT FIRST, ADD UNIQUE (`id`);
+
+
+/*
+Cambios por: Danny Díaz 23-08-2020
+Nota: Panel de administración con roles
+*/
+CREATE TABLE `shop`.`role` ( `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , `name` VARCHAR(32) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+CREATE TABLE `shop`.`user_role` ( `id_role` INT UNSIGNED NOT NULL , `username_user` VARCHAR(30) NOT NULL , INDEX (`id_role`), INDEX (`username_user`)) ENGINE = InnoDB;
+ALTER TABLE `user_role` ADD CONSTRAINT `fk_user_role_role` FOREIGN KEY (`id_role`) REFERENCES `role`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE; ALTER TABLE `user_role` ADD CONSTRAINT `fk_user_role_user` FOREIGN KEY (`username_user`) REFERENCES `user`(`username`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `user_role` ADD PRIMARY KEY(id_role, username_user)
+
+ALTER TABLE `product` CHANGE `product_name` `product_name` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL, CHANGE `price` `price` FLOAT(10,2) NULL DEFAULT '0', CHANGE `avgrating` `avgrating` FLOAT(2,1) NULL DEFAULT '0';
+
+
