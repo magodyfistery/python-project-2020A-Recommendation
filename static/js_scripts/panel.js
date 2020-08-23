@@ -12,11 +12,11 @@ $(function() {
     var once_users = true;
 
     var skip_products = 0;
-    const step_products = 2;
+    const step_products = 5;
     var skip_orders = 0;
-    const step_orders = 2;
+    const step_orders = 5;
     var skip_users = 0;
-    const step_users = 2;
+    const step_users = 5;
 
 
     var table_products = $('#table_products'),
@@ -141,10 +141,14 @@ $(function() {
 
                 }
 
-
                 tr.append(td_stars);
                 var link_edit = $('<a>', {
-                    href: "/admin/panel/updateProduct/"+value.id_product
+                    href: "/admin/panel/updateProduct"
+                          + "/" + value.id_product
+                          + "/" + value.id_category
+                          + "/" + value.name
+                          + "/" + parseFloat(value.price)
+                          + "/" + value.img_path.replaceAll("/", "_-SEP-_").replaceAll("\\", "_-SEP-_")
                             })
 
                 link_edit.append($('<button>', {

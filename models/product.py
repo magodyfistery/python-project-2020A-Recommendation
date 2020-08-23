@@ -86,6 +86,8 @@ class Product(Serializable):
         except Exception as e:
             print(__name__, "get_product: " + str(e))
             return None
+
+
     @staticmethod
     def select_similar_products(connection, prod, cat, n):
         cursor = connection.cursor()
@@ -192,4 +194,36 @@ class Product(Serializable):
         except Exception as e:
             print(__name__, "query: " + str(e))
             return []
+
+
+    def create(self, connection):
+        cursor = connection.cursor()
+        sql = "INSERT INTO product(id_category, product_name, price, img_path) "
+        sql += "VALUES({id_category}, '{product_name}', {price}, '{img_path}')".format(id_category=self.id_category, product_name=self.name, price=self.price, img_path=self.img_path)
+
+        try:
+            cursor.execute(sql)
+            connection.commit()
+            return True
+        except Exception as e:
+            print(__name__, "get_product: " + str(e))
+            return False
+
+    def update(self, connection):
+        cursor = connection.cursor()
+        if self.img_path is None:
+            sql = "UPDATE product set id_category={id_category}, product_name='{product_name}', price={price} WHERE id_product={id_product}".format(id_category=self.id_category, product_name=self.name, price=self.price, id_product=self.id_product)
+
+        else:
+            sql = "UPDATE product set id_category={id_category}, product_name='{product_name}', price={price}, img_path='{img_path}' WHERE id_product={id_product}".format(id_category=self.id_category, product_name=self.name, price=self.price, img_path=self.img_path, id_product=self.id_product)
+
+        try:
+            cursor.execute(sql)
+            connection.commit()
+            return True
+        except Exception as e:
+            print(__name__, "get_product: " + str(e))
+            return False
+
+
 

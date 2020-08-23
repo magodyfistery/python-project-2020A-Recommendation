@@ -17,15 +17,26 @@
 </div>
 <br><br>
 
-<form action="/api/add_product" method="post" enctype="multipart/form-data">
+<form action="/api/update_product" method="post" enctype="multipart/form-data">
     <div class="form-eshop">
       <br><br>
 
 
 
-
-
         <div class="form-group">
+
+            <input class="form-control form-content-lg" type="text" name="id_product"
+                       value="{{ product.id_product if product else -1 }}"
+                       style="display: none;"
+                       required>
+
+            <input class="form-control form-content-lg" type="text" name="img_path"
+                       value="{{ product.img_path if product else '' }}"
+                       style="display: none;"
+                       required>
+
+
+
 
             <select class="form-control" name="category" required>
                 {% if not product %}
@@ -51,21 +62,30 @@
 
         <div class="form-group">
             <input class="form-control form-content-lg" type="text" name="product_name"
-            placeholder="Product name" required>
+            placeholder="Product name"
+                   value="{{ product.name if product else '' }}"
+                   required>
         </div><br>
 
 
         <div class="form-group">
             <input class="form-control form-content-lg" type="number"
                    name="price" min="0" step=".01"
-            placeholder="Price" required>
+            placeholder="Price"
+                   value="{{ product.price if product else '' }}"
+                   required>
         </div><br>
 
 
         <div class="form-group">
-            <label for="img_path">Image</label>
+
+            {% if product %}
+                <p> Previous imagen: </p>
+                <img src="{{ '/static/' + product.img_path}}" width="100%">
+            {% endif %}
+            <label for="img_path">New Image</label>
             <input class="form-control form-content-lg" type="file" name="image" id="img_path"
-            placeholder="Imagen" required>
+            placeholder="Imagen (Optional, leave empty if the image wont be updated)">
         </div>
 
 
@@ -74,7 +94,7 @@
     <br><br>
     <div class="center">
         <button class="btn btn-success" style="color: black; margin: 20px;" type="submit">
-            Save
+            Update
         </button>
 
         <button class="btn btn-danger" style="color: black; margin: 20px;" onclick="window.history.go(-1); return false;">

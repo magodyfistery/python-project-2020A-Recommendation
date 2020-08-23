@@ -6,6 +6,7 @@ from flask import Blueprint, redirect, url_for, session, render_template, reques
 from werkzeug.utils import secure_filename
 
 from database import Database
+from models.category import Category
 from models.order_details import OrderDetails
 from models.product import Product
 from models.user import User
@@ -117,7 +118,6 @@ def get_users():
     skip_users = data['skip_users']
     step_users = data['step_users']
     users = User.select_users(connection, skip_users, step_users)
-    print(users)
     output = {'users': [json.loads(json.dumps(user)) for user in users]}
 
     return jsonify(output)
@@ -127,15 +127,25 @@ def get_users():
 @admin_guard
 def addProduct():
 
-    return render_template("module_admin/add_product.html", logged_in=True)
+    return render_template("module_admin/add_product.html",
+                           logged_in=True,
+                           categories=Category.select_categories(connection)
+                           )
 
 
 
-@admin_page.route('/admin/panel/updateProduct/<int:id>')
+@admin_page.route('/admin/panel/updateProduct/<int:id_product>/<int:id_category>/<string:name>/<regex("\d+(\.\d+)?"):price>/<regex(".*"):img_path>')
 @admin_guard
-def updateProduct(id):
+def updateProduct(id_product, id_category, name, price, img_path):
+    print(img_path)
+    print(img_path.replace('_-SEP-_', "/"))
+    product = Product(id_product, id_category, name, price, img_path.replace('_-SEP-_', "/"), -1)
 
-    return "test " + str(id)
+    return render_template("module_admin/update_product.html",
+                           logged_in=True,
+                           categories=Category.select_categories(connection),
+                           product=product
+                           )
 
 
 
@@ -147,29 +157,78 @@ def allowed_file(filename):
 @admin_guard
 def saveProductInDatabase():
 
-    print(request.files)
+    data = request.form
+    split_category = data['category'].split("-")
+    id_category = int(split_category[0])
+    category_name = split_category[1].lower()
 
-    if request.method == 'POST':
-        # check if the post request has the file part
-        if 'image' not in request.files:
-            flash('No file part')
+    image_name = _save_image(request.files['image'], category_name)
+    if image_name is None:
+        return redirect(url_for('.addProduct'))
+    else:
+        producto = Product(-1, id_category, data['product_name'], data['price'], "images/" +category_name + "/" + image_name, 0)
+        print(producto)
+        if producto.create(connection):
+            return redirect('/admin/panel')
+        else:
+            flash("Error while executing command to database")
             return redirect(url_for('.addProduct'))
 
-        file = request.files['image']
-        # if user does not select file, browser also
-        # submit a empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            full_img_path = Parameters.UPLOAD_FOLDER + "/" + filename
-            file.save(full_img_path)
+
+@admin_page.route('/api/update_product', methods=['GET', 'POST'])
+@admin_guard
+def updateProductInDatabase():
+
+    data = request.form
+    split_category = data['category'].split("-")
+    id_category = int(split_category[0])
+    category_name = split_category[1].lower()
+
+    producto = Product(data['id_product'], -1, None, -1, None, -1)
+
+    if request.files['image'].filename == '':
+        producto = Product(data['id_product'], id_category, data['product_name'], data['price'], None, 0)
+    else:
+        image_name = _save_image(request.files['image'], category_name)
+        if image_name is None:
+            return redirect(url_for('.updateProduct',
+                                id_product=data['id_product'],
+                                id_category=id_category,
+                                name=data['product_name'],
+                                price=data['price'],
+                                img_path=data['img_path']))
+        else:
+            producto = Product(data['id_product'], id_category, data['product_name'], data['price'], "images/" +category_name + "/" + image_name, 0)
+
+    if producto.update(connection):
+        return redirect('/admin/panel')
+    else:
+        flash("Error while executing command to database")
+        return redirect(url_for('.updateProduct',
+                                id_product=data['id_product'],
+                                id_category=id_category,
+                                name=data['product_name'],
+                                price=data['price'],
+                                img_path=data['img_path']))
 
 
-            img_path = "images/" + filename
 
-        return redirect(url_for('.addProduct'))
+def _save_image(file, category_name):
+    # check if the post request has the file part
+    if 'image' not in request.files:
+        flash('No file part')
+        return None
 
+    # if user does not select file, browser also
+    # submit a empty part without filename
+    if file.filename == '':
+        flash('No selected file')
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        full_img_path = Parameters.UPLOAD_FOLDER + "/" + category_name + "/" + filename
+        file.save(full_img_path)
+        return filename
+    return None
 
 
 

@@ -20,6 +20,17 @@ import threading
 
 from parameters import Parameters
 
+from werkzeug.routing import BaseConverter
+
+
+class RegexConverter(BaseConverter):
+    def __init__(self, url_map, *items):
+        super(RegexConverter, self).__init__(url_map)
+        self.regex = items[0]
+
+
+
+
 connection = Database.getConnection()
 
 
@@ -27,6 +38,8 @@ connection = Database.getConnection()
 
 
 app = Flask(__name__)
+app.url_map.converters['regex'] = RegexConverter
+
 app.config['UPLOAD_FOLDER'] = Parameters.UPLOAD_FOLDER
 # forma de dividir la aplicación en partes
 app.register_blueprint(home_page)
