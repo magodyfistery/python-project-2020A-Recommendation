@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+<title> Categories </title>
+{% endblock %}
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-3 my-4">
+        <div class="list-group ml-4">
+            {% for x in categories %}
+            <a href="/category/{{x['category_name']}}" class="list-group-item">{{x['category_name']}}</a>
+            {% endfor %}
+        </div>
+    </div>
+    <div>
+        <h5>
+            {{ c.category_name }}
+        </h5>
+        <img width="500px" src= {{ url_for('static', filename = 'images/categories/') }}{{c.category_name}}.png >
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+      {% for x in prods %}
+      <div class ="col-md-4 col-sm-6 col-xs-12">
+          <div class="shop-item">
+              <a href="/product?view={{x.id_product}}"><img width="223px" src= {{ url_for('static', filename = '') }}{{x.img_path}}></a>
+              <div>
+                  <a href="/product?view={{x.id_product}}">{{x.name}}</a>
+              </div>
+              <div>
+                  <a href="/product?view={{x.id_product}}">{{x.price}}</a>
+              </div>
+              <div>
+                  {% for y in range(x.avgrating|int) %}
+                  <span class="fa fa-star checked text-warning"></span>
+                  {% endfor %}
+                  {%for z in range(5-(x.avgrating|int))%}
+                  <span class="fa fa-star"></span>
+                  {% endfor %}
+              </div>
+          </div>
+      </div> 
+      {% endfor %}
+    </div>
+</div>
+
+
+
+{% endblock %}

@@ -6,6 +6,7 @@ from werkzeug.utils import redirect
 from database import Database
 from models.country import Country
 from models.user import User
+from models.history import History
 from utils.cryptography import encrypt_with_sha_256
 
 my_account_page = Blueprint('my_account_page', __name__, template_folder='templates')
@@ -14,9 +15,21 @@ connection = Database.getConnection()
 @my_account_page.route("/my_account")
 def my_account():
     user_data = session.get('user_data', None)
-    return render_template("module_account/my_account.html",
+    user=json.loads(user_data)
+    username = user['username']
+    history = History.select_user_history(connection,username)
+    if history:
+        return render_template("module_account/my_account.html",
+                        history=history,
                            logged_in=True,
                            user=json.loads(user_data) if user_data else None)
+    else:
+        return render_template("module_account/my_account.html",
+                            history=None,
+                           logged_in=True,
+                           user=json.loads(user_data) if user_data else None)
+
+    
 
 
 @my_account_page.route("/my_account/settings")

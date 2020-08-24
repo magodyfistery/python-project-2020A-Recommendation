@@ -1,4 +1,4 @@
-def print_debug(label, data):
+def log(label, data):
     print(label+": \n", data, end='\n\n')
 
 
