@@ -5,6 +5,7 @@ from time import sleep
 
 from flask import Flask, request, jsonify
 
+from blueprints.blueprint_admin import admin_page
 from blueprints.blueprint_cart import cart_page
 from blueprints.blueprint_home import home_page
 from blueprints.blueprint_login import login_page
@@ -15,7 +16,6 @@ from database import Database
 from models.city import City
 from matrix_factorization_system.recommendations import user_candidate_generation, get_total_sources
 from matrix_factorization_system.build_model import generateModel
-from blueprints.blueprint_admin import admin_page
 import threading
 
 from parameters import Parameters
@@ -93,9 +93,11 @@ def get_custom_recommendations():
 
     with_rated = False
     candidate_generation = user_candidate_generation(user_id, "id", "id_product")
-    total_sources = get_total_sources(candidate_generation, user_id, with_rated=with_rated, verbosity=0)
-    recommendations = list(total_sources.index)[0:quantity_recommendations]  # ya viene ordenado con prioridad
-
+    total_sources = get_total_sources(candidate_generation, user_id, with_rated=with_rated, verbosity=1)
+      # ya viene ordenado con prioridad
+    recommendations = []
+    for i in range(quantity_recommendations):
+        recommendations.append(json.loads(json.dumps(total_sources[i].toJSON())))
 
 
 
@@ -109,7 +111,6 @@ def get_custom_recommendations():
     }
 
 
-
     return jsonify(respuesta)
 
 
@@ -120,18 +121,18 @@ def model_updater():
         generateModel(
             embedding_dim=30,
             init_stddev=1,
-            num_iterations=500,
+            num_iterations=1000,
             learning_rate=0.03,
-            verbosity=0
+            verbosity=1
         )
 
-        sleep(1200)  # cada 20 minutos
+        sleep(600)  # cada 10 minutos
 
 
 if __name__ == "__main__":
 
     print("Iniciando programa")
-    keep_training = False
+    keep_training = True
 
     threading.Thread(target=model_updater).start()
 

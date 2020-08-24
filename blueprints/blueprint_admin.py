@@ -7,7 +7,9 @@ from werkzeug.utils import secure_filename
 
 from database import Database
 from models.category import Category
+from models.country import Country
 from models.order_details import OrderDetails
+from models.orders import Order
 from models.product import Product
 from models.user import User
 from parameters import Parameters
@@ -137,8 +139,6 @@ def addProduct():
 @admin_page.route('/admin/panel/updateProduct/<int:id_product>/<int:id_category>/<string:name>/<regex("\d+(\.\d+)?"):price>/<regex(".*"):img_path>')
 @admin_guard
 def updateProduct(id_product, id_category, name, price, img_path):
-    print(img_path)
-    print(img_path.replace('_-SEP-_', "/"))
     product = Product(id_product, id_category, name, price, img_path.replace('_-SEP-_', "/"), -1)
 
     return render_template("module_admin/update_product.html",
@@ -146,6 +146,8 @@ def updateProduct(id_product, id_category, name, price, img_path):
                            categories=Category.select_categories(connection),
                            product=product
                            )
+
+
 
 
 
@@ -232,5 +234,63 @@ def _save_image(file, category_name):
 
 
 
+@admin_page.route('/admin/settings')
+@admin_guard
+def my_account_settings():
+    user_data_admin = session.get('user_data_admin', None)
 
+    return render_template("module_admin/settings.html",
+                           countries=Country.select_countries(connection),
+                           logged_in=True,
+                           user=json.loads(user_data_admin) if user_data_admin else None)
+
+
+
+
+@admin_page.route('/api/update_admin', methods=['POST'])
+@admin_guard
+def update_admin():
+    data = request.form
+
+    user_data_admin = json.loads(session['user_data_admin'])
+
+    user = User(
+            data['username'], data['name'], int(data['country']),
+            data['city'], data['email'], user_data_admin['passwd']
+        )
+
+    if encrypt_with_sha_256(data['password']) == user_data_admin['passwd'] and data['password'] == data['password_confirmation']:
+        if user.update(connection):
+            session['user_data_admin'] = user.toJSON()
+            flash("User updated successfully")
+            return redirect("/admin/panel")
+        else:
+            flash("Can't update user")
+    else:
+        flash("Exist a problem with the password")
+
+    return redirect(url_for('.my_account_settings'))
+
+
+
+@admin_page.route('/admin/dashboard')
+@admin_guard
+def view_dashboard():
+    bar_labels, bar_values = Product.select_ten_best_selled_products(connection)
+    line_labels, line_values = Order.select_ten_last_days(connection)
+    user_data_admin = session.get('user_data_admin', None)
+
+
+
+    return render_template('module_admin/dashboard.html',
+
+                           bar_max= max(bar_values),
+                           bar_labels=bar_labels,
+                           bar_values=bar_values,
+                           line_max= max(line_values),
+                           line_labels=line_labels,
+                           line_values=line_values,
+                           logged_in=True,
+                           user=json.loads(user_data_admin) if user_data_admin else None
+                           )
 

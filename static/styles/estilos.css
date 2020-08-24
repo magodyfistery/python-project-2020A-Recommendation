@@ -43,3 +43,17 @@ a {
     margin-left: 4%;
     margin-right: 4%;
 }
+
+
+.container-chart {
+    width: 100%;
+    height: 100%;
+
+
+}
+
+.chart {
+    display: inline;
+    width: 49%;
+    height: 50%;
+}

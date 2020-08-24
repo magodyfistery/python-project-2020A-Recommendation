@@ -225,5 +225,32 @@ class Product(Serializable):
             print(__name__, "get_product: " + str(e))
             return False
 
+    @staticmethod
+    def select_ten_best_selled_products(connection):
+
+        cursor = connection.cursor()
+        sql = "SELECT p.product_name, SUM(subtotal) as total "
+        sql += "FROM order_details as od, product as p WHERE p.id_product = od.id_product "
+        sql += "GROUP BY od.id_product ORDER BY total DESC LIMIT 10"
+
+
+        try:
+            cursor.execute(sql)
+            labels = []
+            values = []
+            fetch = cursor.fetchall()
+            for product in fetch:
+                labels.append(product['product_name'])
+                values.append(product['total'])
+            return labels, values
+        except Exception as e:
+            print(__name__, "query: " + str(e))
+            return [], []
+
+
+
+
+
+
 
 

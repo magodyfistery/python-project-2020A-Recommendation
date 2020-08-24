@@ -1,7 +1,9 @@
 
 import pandas as pd
+from flask import jsonify
 
 from database import Database
+from models.product import Product
 from utils.similarity_measures import *
 from utils.console_functions import log
 import pickle
@@ -72,7 +74,7 @@ def get_total_sources(candidates, user_id, with_rated=False, verbosity=1):
     extra_ponderation = len(candidates)/4
 
     connection = Database.getConnection()
-    sql_catalog = "SELECT p.id_product, p.id_category, p.price FROM product as p"
+    sql_catalog = "SELECT p.* FROM product as p"
 
     sql_popular_products = "SELECT p.id_product FROM product as p ORDER BY avgrating DESC limit 5"
 
@@ -86,7 +88,7 @@ def get_total_sources(candidates, user_id, with_rated=False, verbosity=1):
 
 
     for index, id in enumerate(candidates[::-1]):
-        catalog_products.loc[id, :] = index + 1
+        catalog_products.loc[id, 'score'] = index + 1
 
 
 
@@ -111,22 +113,36 @@ def get_total_sources(candidates, user_id, with_rated=False, verbosity=1):
 
         if id not in already_rated:
             if id not in candidates:
-                catalog_products.loc[id, :] += extra_ponderation/2
+                catalog_products.loc[id, 'score'] += extra_ponderation/2
             else:
-                catalog_products.loc[id, :] += extra_ponderation  # doble aprobación
+                catalog_products.loc[id, 'score'] += extra_ponderation  # doble aprobación
 
     for id in best_seller_products:
 
         if id not in already_rated:
             if id not in candidates:
-                catalog_products.loc[id, :] += extra_ponderation/2
+                catalog_products.loc[id, 'score'] += extra_ponderation/2
             else:
-                catalog_products.loc[id, :] += extra_ponderation  # doble aprobación
+                catalog_products.loc[id, 'score'] += extra_ponderation  # doble aprobación
 
     if verbosity == 1:
         log("catalog_products", catalog_products.sort_values(["score"], ascending=False))
 
-    return catalog_products.sort_values(["score"], ascending=False)
+
+    df = catalog_products.sort_values(["score"], ascending=False)
+
+    products = []
+    for index in df.index:
+        products.append(Product(
+            index,
+            int(df.loc[index, 'id_category']),
+            str(df.loc[index, 'product_name']),
+            float(df.loc[index, 'price']),
+            str(df.loc[index, 'img_path']),
+            float(df.loc[index, 'avgrating'])
+        ))
+
+    return products
 
 
 
