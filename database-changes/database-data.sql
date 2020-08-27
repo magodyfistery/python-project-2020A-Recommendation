@@ -11,6 +11,7 @@ insert into category values (0,'Accesories','This is about accesories.');
 insert into category values (0,'Smartphones','This is about smartphones.');
 insert into category values (0,'Audio','This is about audio.');
 
+
 --------------------------PRODUCT---------------------------
 insert into product values (0,1,'Computer1',499.99,'images/computers/1.png',0);
 insert into product values (0,1,'Computer2',599.99,'images/computers/2.png',0);
@@ -31,15 +32,32 @@ INSERT INTO `city` (`id_country`, `name`) VALUES ('2', 'Boston'), ('2', 'New Yor
 
 ---------------------------ROLE-------------------------
 INSERT INTO `role` (`id`, `name`) VALUES (NULL, 'ADMIN'), (NULL, 'EMPLOYEE')
+INSERT INTO `role` (`id`, `name`) VALUES (NULL, 'NEWS_WRITER')
 
 ---------------------------USER-------------------------
 insert into user values ('user1','FirstName SecondName',1, 'Quito', 'example@domain.com','0a041b9462caa4a31bac3567e0b6e6fd9100787db2ab433d96f6d178cabfce90');
 insert into user values ('user2','FirstName SecondName',1, 'Quito', 'example2@domain.com','6025d18fe48abd45168528f18a82e265dd98d421a7084aa09f61b341703901a3');
 insert into user values ('user3','FirstName SecondName',1, 'Quito', 'example3@domain.com','5860faf02b6bc6222ba5aca523560f0e364ccd8b67bee486fe8bf7c01d492ccb');
+INSERT INTO `user` (`id`, `username`, `fullname`, `id_country`, `city`, `email`, `passwd`) VALUES (NULL, 'user_writer', 'Escritor Meliodas', '2', 'Boston', 'writer@shop.com', '05d2fae99137b000835d07d06cbec12210acdeca65d7f70721973672514ffccc')
 
 ---------------------------USER_ROLE-------------------------
 INSERT INTO `user_role` (`id_role`, `username_user`) VALUES ('1', 'user1'), ('2', 'user2')
+INSERT INTO `user_role` (`id_role`, `username_user`) VALUES ('3', 'user_writer')
 
+
+---------------------------NEWS_CATEGORY-------------------------
+INSERT INTO `news_category` (`id`, `name`) VALUES (NULL, 'POLITIC')
+
+
+
+---------------------------NEWS-------------------------
+INSERT INTO `news` (`id`, `author_user`, `publish_date`, `title`, `description`, `url`, `content_html`, `id_news_category`) VALUES (NULL, 'user_writer', CURRENT_TIMESTAMP, 'Toque de queda, teletrabajo', 'Policías realizan controles en Carapungo, norte de Quito, para prevenir el brote del covid-19.', 'https://www.elcomercio.com/actualidad/excepcion-pandemia-cambios-movilidad-teletrabajo.html', 'El 12 de septiembre de 2020 terminará el estado de excepción en Ecuador y, pese a que supera los 100 000 contagios y las 10 000 muertes por covid-19, no será renovado, informó este miércoles 26 de agosto del 2020 la ministra de Gobierno, María Paula Romo. “La Corte Constitucional dictaminó que el actual estado de excepción será el último, sobre la calamidad pública por la pandemia del covid-19”, señaló Romo en su cuenta de Twitter. Después de la culminación del actual estado de excepción no habrá restricción en dos medidas: libertad de tránsito y libertad de asociación, puntualizó este miércoles Juan Zapata, director general del Servicio Integrado de Seguridad ECU-911. Esto rige desde el 13 de septiembre 2020. Los cambios son dos: Toque de queda Tras la finalización del estado de excepción regresa la libertad para movilizarse en el país a cualquier hora. No habrá toque de queda en el Ecuador ni controles policiales para que se cumpla esta medida. Reuniones No habrá restricciones en el derecho a la libre asociación. Las reuniones estarán permitidas. El Gobierno informó que desde el 13 de septiembre arrancará una nueva etapa para afrontar la pandemia del covid-19: la autorregulación. Por ello el Gobierno Nacional presentó la campaña \'Yo me cuido\', que tiene como objetivo crear conciencia en la ciudadanía sobre la necesidad de protegerse, es decir, mantener los protocolos de bioseguridad: lavado de manos, distanciamiento social, uso obligatorio de la mascarilla y evitar aglomeraciones. En cuanto al teletrabajo, Zapata dijo que se seguirá privilegiando dicha modalidad laboral conforme a lo establecido por el Ministerio de Trabajo. El uso de playas, espacios públicos y la movilidad de vehículos es competencia de los Gobiernos Autónomos Descentralizados (GAD), por lo que serán las autoridades locales las que decidan cómo proceder en ese ámbito, agregó. En aquellos cantones donde no hay esta figura será el Gobierno Nacional el que tome las resoluciones. “Hay que coordinar con la Asociación de Municipalidades Ecuatorianas (AME) para que las ordenanzas vayan en la misma línea de la semaforización, es decir, que no sean diferentes y que generen complicaciones a nivel nacional”, dijo Zapata. De igual manera, señaló que el Comité de Operaciones de Emergencia (COE) seguirá actuando sin la necesidad de que rija un estado de excepción, es decir que, se seguirán generando resoluciones, pero con la base legal ordinaria.', '1');
+
+---------------------------SOURCE-------------------------
+INSERT INTO `source` (`id_news`, `url`, `name`) VALUES ('1', 'https://www.elcomercio.com/actualidad/excepcion-pandemia-cambios-movilidad-teletrabajo.html', 'El comercio');
+
+---------------------------USER_VIEW_NEWS-------------------------
+INSERT INTO `user_view_news` (`id_news`, `username_user`, `date_view`) VALUES ('1', 'user3', CURRENT_TIMESTAMP);
 
 ---------------------------ORDERS-------------------------
 insert into orders values (0, 'user1', '2020-01-01 10:10:10', 0);

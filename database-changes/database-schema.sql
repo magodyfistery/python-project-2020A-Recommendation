@@ -174,3 +174,35 @@ ALTER TABLE `user_role` ADD PRIMARY KEY(id_role, username_user)
 ALTER TABLE `product` CHANGE `product_name` `product_name` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL, CHANGE `price` `price` FLOAT(10,2) NULL DEFAULT '0', CHANGE `avgrating` `avgrating` FLOAT(2,1) NULL DEFAULT '0';
 
 
+
+/*
+Cambios por: Danny Díaz 26-08-2020
+Nota: Inicio de noticias
+*/
+
+
+CREATE TABLE `shop`.`news` ( `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , `author_user` VARCHAR(30) NOT NULL , `publish_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `title` VARCHAR(30) NOT NULL , `description` VARCHAR(140) NOT NULL , `url` TEXT NOT NULL , `content_html` TEXT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+ALTER TABLE `news` ADD INDEX(`author_user`);
+ALTER TABLE `news` ADD CONSTRAINT `fk_news_user` FOREIGN KEY (`author_user`) REFERENCES `user`(`username`) ON DELETE RESTRICT ON UPDATE CASCADE;
+CREATE TABLE `shop`.`news_category` ( `id` TINYINT UNSIGNED NOT NULL AUTO_INCREMENT , `name` VARCHAR(20) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+ALTER TABLE `news` ADD `id_news_category` TINYINT NOT NULL AFTER `content_html`, ADD INDEX (`id_news_category`);
+ALTER TABLE `news_category` CHANGE `id` `id` TINYINT(4) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `news` CHANGE `id_news_category` `id_news_category` TINYINT(4) UNSIGNED NOT NULL;
+ALTER TABLE `news` ADD CONSTRAINT `fk_news_category` FOREIGN KEY (`id_news_category`) REFERENCES `news_category`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+CREATE TABLE `shop`.`source` ( `id_news` INT UNSIGNED NOT NULL , `url` TEXT NOT NULL , `name` VARCHAR(20) NOT NULL , PRIMARY KEY (`id_news`, `name`)) ENGINE = InnoDB;
+
+ALTER TABLE `source` ADD INDEX(`id_news`);
+ALTER TABLE `source` ADD CONSTRAINT `fk_source_news` FOREIGN KEY (`id_news`) REFERENCES `news`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+CREATE TABLE `shop`.`user_view_news` ( `id_news` INT UNSIGNED NOT NULL , `username_user` VARCHAR(30) NOT NULL , `date_view` DATE NOT NULL , PRIMARY KEY (`id_news`, `username_user`)) ENGINE = InnoDB;
+ALTER TABLE `user_view_news` ADD INDEX(`username_user`);
+ALTER TABLE `user_view_news` ADD INDEX(`id_news`);
+ALTER TABLE `user_view_news` ADD CONSTRAINT `fk_view_news` FOREIGN KEY (`id_news`) REFERENCES `news`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE; ALTER TABLE `user_view_news` ADD CONSTRAINT `fk_view_user` FOREIGN KEY (`username_user`) REFERENCES `user`(`username`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `user_view_news` CHANGE `date_view` `date_view` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+
+
+
+
+

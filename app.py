@@ -10,6 +10,7 @@ from blueprints.blueprint_cart import cart_page
 from blueprints.blueprint_home import home_page
 from blueprints.blueprint_login import login_page
 from blueprints.blueprint_my_account import my_account_page
+from blueprints.blueprint_news import news_page
 from blueprints.blueprint_register import register_page
 from blueprints.blueprint_product import product
 from database import Database
@@ -49,6 +50,9 @@ app.register_blueprint(cart_page)
 app.register_blueprint(my_account_page)
 app.register_blueprint(product)
 app.register_blueprint(admin_page)
+app.register_blueprint(news_page)
+
+
 
 model = None
 id_items = None
