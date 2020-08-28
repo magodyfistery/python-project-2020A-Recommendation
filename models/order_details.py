@@ -20,4 +20,29 @@ class OrderDetails(Serializable):
         except Exception as e:
             print(__name__, "insert_order_details: " + str(e))
             return None
-    
+
+    @staticmethod
+    def select_orders(connection, skip, step):
+        cursor = connection.cursor()
+        sql = "SELECT o.id_order, o.username_user, p.product_name, od.quantity, o.order_date, od.subtotal FROM order_details as od, orders as o, product as p "
+        sql += "WHERE od.id_order = o.id_order AND od.id_product = p.id_product ORDER BY id_order ASC LIMIT {skip}, {step}".format(skip=skip, step=step)
+
+        try:
+            cursor.execute(sql)
+            orders = []
+            fetch = cursor.fetchall()
+            for order in fetch:
+                orders.append(
+                    {
+                        'id_order': order['id_order'],
+                        'username_user': order['username_user'],
+                        'product_name': order['product_name'],
+                        'quantity': order['quantity'],
+                        'order_date': str(order['order_date']),
+                        'subtotal': order['subtotal']
+                    }
+                )
+            return orders
+        except Exception as e:
+            print(__name__, "query: " + str(e))
+            return []

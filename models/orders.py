@@ -20,4 +20,26 @@ class Order(Serializable):
         except Exception as e:
             print(__name__, "insert_order: " + str(e))
             return None
-        
+
+    @staticmethod
+    def select_ten_last_days(connection):
+
+        cursor = connection.cursor()
+        sql = "SELECT Date(order_date) as odate, SUM(total) as total  "
+        sql += "FROM orders as o GROUP BY Date(order_date) ORDER BY order_date DESC LIMIT 10"
+
+
+        try:
+            cursor.execute(sql)
+            labels = []
+            values = []
+            fetch = cursor.fetchall()
+            for product in fetch:
+                labels.append(str(product['odate']))
+                values.append(product['total'])
+            return labels, values
+        except Exception as e:
+            print(__name__, "query: " + str(e))
+            return [], []
+
+

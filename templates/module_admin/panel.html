@@ -1,0 +1,112 @@
+{% extends "base_admin.html" %}
+
+
+{% block head %}
+<title> Admin Panel </title>
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/estilos.css') }}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="center">
+  <h3> Admin Panel </h3>
+</div>
+<br><br>
+
+<div class="center style='
+            display: flex;
+            flex-direction: row;
+            order: 3;
+
+            '">
+    <button class="btn btn-primary button-panel" id="button_products">
+        Products
+    </button>
+     <button class="btn btn-primary button-panel" id="button_orders">
+        Orders
+    </button>
+     <button class="btn btn-primary button-panel" id="button_users">
+        Users
+    </button>
+</div>
+
+<div id="div_products" style="display: none;">
+
+    <br><br>
+    <button class="btn btn-primary" onclick="addProduct">
+        <a href="/admin/panel/addProduct" style="color: white;">
+           Add product
+        </a>
+    </button><br><br>
+
+    <table id="table_products" class="center table  table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th> Product ID </th>
+                <th> Category ID </th>
+                <th> Product Name </th>
+                <th> Price </th>
+                <th> Rating </th>
+                <th> Actions </th>
+            </tr>
+        </thead>
+
+
+
+    </table>
+
+    <button class="btn btn-primary" id="show_more_products">
+        Show more
+    </button>
+
+
+</div>
+
+
+
+
+<div class="center" id="div_orders" style="display: none;">
+    <table id="table_orders" class="center table  table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th> Order number </th>
+                <th> Order date </th>
+                <th> User </th>
+                <th> Product Name </th>
+                <th> Quantity </th>
+                <th> Subtotal </th>
+            </tr>
+        </thead>
+    </table>
+
+     <button class="btn btn-primary" id="show_more_orders">
+        Show more
+    </button>
+</div>
+
+<div class="center" id="div_users" style="display: none;">
+    <table id="table_users" class="center table  table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th> User ID </th>
+                <th> Name </th>
+                <th> Email </th>
+                <th> Username </th>
+                <th> Country </th>
+                <th> City </th>
+            </tr>
+        </thead>
+    </table>
+
+     <button class="btn btn-primary" id="show_more_users">
+        Show more
+    </button>
+</div>
+
+
+<script charset="utf-8" type="text/javascript" src="../static/js_scripts/panel.js">
+
+</script>
+
+{% endblock %}

@@ -86,7 +86,19 @@ ALTER TABLE `user` ADD CONSTRAINT `fk_user_country_city` FOREIGN KEY (`id_countr
 
 /*Cambios por: Ronny Jaramillo 12-08-2020
 Nota: cambio nombre del campo 'status' a 'pstatus' 
-y del campo 'description' a 'pdescription' de la tabla 'processing_status'*/
+y del campo 'description' a 'pdescription' de la tabla 'processing_status'
+Nota 2 (Danny Díaz): se cambió el orden de instrucciones debido a errores que provocaba por dependencias
+*/
+
+CREATE TABLE processing_status(
+    id_processing_status int,
+    pstatus varchar(256),
+    pdescription varchar(256)
+);
+
+
+
+
 CREATE TABLE user_product_rating(
     username_user varchar(30) NOT NULL,
     id_product int NOT NULL,
@@ -97,13 +109,68 @@ CREATE TABLE user_product_rating(
     FOREIGN KEY (id_processing_status) REFERENCES processing_status(id_processing_status)
 );
 ALTER TABLE `user_product_rating` ENGINE = INNODB;
+
 ALTER TABLE `user_product_rating` ADD CONSTRAINT `fk_rating_user` FOREIGN KEY (`username_user`) REFERENCES `user`(`username`) ON DELETE RESTRICT ON UPDATE CASCADE;
 ALTER TABLE `user_product_rating` ADD CONSTRAINT `fk_rating_product` FOREIGN KEY (`id_product`) REFERENCES `product`(`id_product`) ON DELETE RESTRICT ON UPDATE CASCADE;
 ALTER TABLE `user_product_rating` ADD CONSTRAINT `fk_rating_processing` FOREIGN KEY (`id_processing_status`) REFERENCES `processing_status`(`id_processing_status`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+
+
+/*Cambios por: Danny Díaz 16-08-2020
+Nota: Las instrucciones anteriores no crearon las FK de forma correcta, se realizó una adecuación
+luego de cambiar el ENGINE de processing_status, e igualar los tipos de datos de id_processing_status,
+finalmente agregando indices que sostengan las FK, en la interfaz de PHPMyAdmin se evidenciaba que no se crearon
+de forma correcta sobre todo por la diferencia de tipo de dato de la clave de processing_status
+*/
+
+
+
+//////// correcciones de claves PK y FK  //////
+DROP TABLE user_product_rating;
+
+CREATE TABLE user_product_rating(
+    username_user varchar(30) NOT NULL,
+    id_product int NOT NULL,
+    rating float(3,2),
+    id_processing_status int NOT NULL
+);
+ALTER TABLE `user_product_rating` ENGINE = INNODB;
+
+ALTER TABLE `user_product_rating` ADD INDEX(`username_user`);
+ALTER TABLE `user_product_rating` ADD INDEX(`id_product`);
+ALTER TABLE `user_product_rating` ADD INDEX(`id_processing_status`);
+
+ALTER TABLE `user_product_rating` ADD CONSTRAINT `fk_rating_user` FOREIGN KEY (`username_user`) REFERENCES `user`(`username`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `user_product_rating` ADD CONSTRAINT `fk_rating_product` FOREIGN KEY (`id_product`) REFERENCES `product`(`id_product`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+
+DROP TABLE processing_status;
 
 CREATE TABLE processing_status(
     id_processing_status int,
     pstatus varchar(256),
     pdescription varchar(256)
-    PRIMARY KEY (id_processing_status)
 );
+ALTER TABLE `processing_status` ADD PRIMARY KEY(id_processing_status);
+
+ALTER TABLE `processing_status` ENGINE = INNODB;
+ALTER TABLE `processing_status` CHANGE `id_processing_status` `id_processing_status` INT(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `user_product_rating` ADD CONSTRAINT `fk_rating_processing` FOREIGN KEY (`id_processing_status`) REFERENCES `processing_status`(`id_processing_status`) ON DELETE RESTRICT ON UPDATE CASCADE;
+//////// fin de correcciones de claves PK y FK  //////
+
+
+ALTER TABLE `user` ADD `id` INT UNSIGNED NOT NULL AUTO_INCREMENT FIRST, ADD UNIQUE (`id`);
+
+
+/*
+Cambios por: Danny Díaz 23-08-2020
+Nota: Panel de administración con roles
+*/
+CREATE TABLE `shop`.`role` ( `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , `name` VARCHAR(32) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+CREATE TABLE `shop`.`user_role` ( `id_role` INT UNSIGNED NOT NULL , `username_user` VARCHAR(30) NOT NULL , INDEX (`id_role`), INDEX (`username_user`)) ENGINE = InnoDB;
+ALTER TABLE `user_role` ADD CONSTRAINT `fk_user_role_role` FOREIGN KEY (`id_role`) REFERENCES `role`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE; ALTER TABLE `user_role` ADD CONSTRAINT `fk_user_role_user` FOREIGN KEY (`username_user`) REFERENCES `user`(`username`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `user_role` ADD PRIMARY KEY(id_role, username_user)
+
+ALTER TABLE `product` CHANGE `product_name` `product_name` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL, CHANGE `price` `price` FLOAT(10,2) NULL DEFAULT '0', CHANGE `avgrating` `avgrating` FLOAT(2,1) NULL DEFAULT '0';
+
+

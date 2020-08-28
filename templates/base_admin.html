@@ -15,30 +15,23 @@
 
 
             <nav class="navbar navbar-light">
-                <a class="navbar-brand" href="/">
-                  <h2 class="text-secondary"> RS E-SHOP </h2>
+                <a class="navbar-brand" href="/admin/panel">
+                  <h2 class="text-secondary"> Panel </h2>
                 </a>
                 <div style="float: right;">
                     {% if logged_in %}
-                        <a class="navbar-brand" href="/my_cart">
-                          <h2 class="text-secondary"> My Cart </h2>
+                        <a class="navbar-brand" href="/admin/dashboard">
+                          <h2 class="text-secondary"> Dashboard </h2>
                         </a>
-                        <a class="navbar-brand" href="/my_account">
+                        <a class="navbar-brand" href="/admin/settings">
                             {% if user %}
                                 <h2> {{ user.username }} </h2>
                             {% else %}
                                 <h2> Account </h2>
                             {% endif %}
                         </a>
-                        <a class="navbar-brand" href="/log_out">
+                        <a class="navbar-brand" href="/admin/log_out">
                           <h2 class="text-secondary"> Log out </h2>
-                        </a>
-                    {% else %}
-                        <a class="navbar-brand" href="/login">
-                          <h3 class="text-secondary"> Login </h3>
-                        </a>
-                        <a class="navbar-brand" href="/register">
-                          <h3 class="text-secondary"> Sign up </h3>
                         </a>
                     {% endif %}
                   </div>
@@ -55,20 +48,7 @@
 
         {% block content %}{% endblock %}
 
-        <footer class="page-footer bg-primary">
-          <ul class="list-unstyled">
-            <li>
-              <a class="text-light" href="#!">About Us</a>
-            </li>
-            <li>
-              <a target="_blank" class="text-light" href="https://www.twitter.com">Twitter</a>
-            </li>
-            <li>
-              <a target="_blank" class="text-light" href="https://www.facebook.com">Facebook</a>
-            </li>
-          
-          </ul>
-        </footer>
+
 
         {% with messages = get_flashed_messages() %}
           {% if messages %}
