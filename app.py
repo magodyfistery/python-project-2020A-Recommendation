@@ -14,7 +14,7 @@ from blueprints.blueprint_register import register_page
 from blueprints.blueprint_product import product
 from database import Database
 from models.city import City
-from matrix_factorization_system.recommendations import user_candidate_generation, get_total_sources
+from matrix_factorization_system.recommendations import user_candidate_generation, get_total_sources, get_sparse_matrix_ratings
 from matrix_factorization_system.build_model import generateModel
 import threading
 
@@ -53,8 +53,10 @@ app.register_blueprint(admin_page)
 model = None
 id_items = None
 
-
-
+print('#######################################')
+a = get_sparse_matrix_ratings()
+print(a)
+print('#######################################')
 
 @app.route('/api/get_cities')  # si se usa por más de un blueprint, debería estar en app.py
 def get_cities():

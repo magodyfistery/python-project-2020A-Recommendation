@@ -88,10 +88,10 @@ def save_order():
                 for prod in prods:
                     OrderDetails.insert_order_details(connection,OrderDetails(0,0,prod.id_product,prod.quantity,prod.total))
                     UserProductRating.insert_product_notrated(connection,UserProductRating(username,prod.id_product,0,0))
-                flash('Compra registrada exitósamente!')
+                flash('Order Saved Successfully!')
                 session.modified = True
                 session['mycart'].pop(username)
                 return redirect(url_for(".my_cart"))
         else:
-            flash("Error guardando la compra, inténtelo más tarde.")
+            flash("Error saving order, try again later.")
             return redirect(request.referrer)

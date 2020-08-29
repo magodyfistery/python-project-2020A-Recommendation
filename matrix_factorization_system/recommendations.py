@@ -149,7 +149,7 @@ def get_total_sources(candidates, user_id, with_rated=False, verbosity=1):
 def get_sparse_matrix_ratings():
     connection = Database.getConnection()
 
-    sql = "SELECT u.id, r.id_product, r.rating FROM user_product_rating as r, user as u WHERE u.username = r.username_user AND id_processing_status=1"
+    sql = "SELECT u.id, r.id_product, r.rating FROM user_product_rating as r, user as u WHERE u.username = r.username_user"
 
 
     ratings = pd.read_sql(sql, connection)
@@ -171,5 +171,13 @@ def get_sparse_matrix_ratings():
         for j in range(len(sparse_matrix[0])):
             print("%.1f" % sparse_matrix[i][j], end="    ")
         print()
+    #Asumiendo que los productos siempre estarán en orden de id y que no habrá brecha entre id's.
+    #Uso un diccionario de estilo {'user_id1':[],'user_id2':[]}
+    b = {}
+    i=1
+    for item in sparse_matrix:
+        b[str(i)]=item
+        i += 1
 
-    return sparse_matrix
+    return b
+

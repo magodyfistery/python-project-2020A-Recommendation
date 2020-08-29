@@ -20,6 +20,7 @@ insert into product values (0,3,'Smartphone1',199.99,'images/smartphones/5.png',
 insert into product values (0,3,'Smartphone2',159.99,'images/smartphones/6.png',0);
 insert into product values (0,1,'Computer3',699.99,'images/computers/7.png',0);
 insert into product values (0,1,'Computer4',799.99,'images/computers/8.png',0);
+insert into product values (0,1,'Computer444',799.99,'images/computers/8.png',0);
 
 ---------------------------COUNTRY-------------------------
 INSERT INTO `country` (`id`, `name`) VALUES (NULL, 'Ecuador'), (NULL, 'United States');
@@ -30,15 +31,15 @@ INSERT INTO `city` (`id_country`, `name`) VALUES ('2', 'Boston'), ('2', 'New Yor
 
 
 ---------------------------ROLE-------------------------
-INSERT INTO `role` (`id`, `name`) VALUES (NULL, 'ADMIN'), (NULL, 'EMPLOYEE')
+INSERT INTO `role` (`id`, `name`) VALUES (NULL, 'ADMIN'), (NULL, 'EMPLOYEE');
 
 ---------------------------USER-------------------------
-insert into user values ('user1','FirstName SecondName',1, 'Quito', 'example@domain.com','0a041b9462caa4a31bac3567e0b6e6fd9100787db2ab433d96f6d178cabfce90');
-insert into user values ('user2','FirstName SecondName',1, 'Quito', 'example2@domain.com','6025d18fe48abd45168528f18a82e265dd98d421a7084aa09f61b341703901a3');
-insert into user values ('user3','FirstName SecondName',1, 'Quito', 'example3@domain.com','5860faf02b6bc6222ba5aca523560f0e364ccd8b67bee486fe8bf7c01d492ccb');
+insert into user values (0,'user1','FirstName SecondName',1, 'Quito', 'example@domain.com','0a041b9462caa4a31bac3567e0b6e6fd9100787db2ab433d96f6d178cabfce90');
+insert into user values (0,'user2','FirstName SecondName',1, 'Quito', 'example2@domain.com','6025d18fe48abd45168528f18a82e265dd98d421a7084aa09f61b341703901a3');
+insert into user values (0,'user3','FirstName SecondName',1, 'Quito', 'example3@domain.com','5860faf02b6bc6222ba5aca523560f0e364ccd8b67bee486fe8bf7c01d492ccb');
 
 ---------------------------USER_ROLE-------------------------
-INSERT INTO `user_role` (`id_role`, `username_user`) VALUES ('1', 'user1'), ('2', 'user2')
+INSERT INTO `user_role` (`id_role`, `username_user`) VALUES ('1', 'user1'), ('2', 'user2');
 
 
 ---------------------------ORDERS-------------------------
@@ -89,4 +90,4 @@ insert into order_details values (0,3,7,500,3999.90);
 
 
 ---------------------------USER_PRODUCT_RATING-------------------------
-INSERT INTO `user_product_rating` (`username_user`, `id_product`, `rating`, `id_processing_status`) VALUES ('user1', '1', '5', '1'), ('user1', '7', '4', '1'), ('user1', '3', '2', '1'), ('user2', '5', '2', '1'), ('user2', '4', '5', '1'), ('user2', '6', '4', '1'), ('user3', '3', '3', '1'), ('user3', '5', '5', '1'), ('user3', '6', '5', '1')
+INSERT INTO `user_product_rating` (`username_user`, `id_product`, `rating`) VALUES ('user1', '1', '5'), ('user1', '7', '4'), ('user1', '3', '2'), ('user2', '5', '2'), ('user2', '4', '5'), ('user2', '6', '4'), ('user3', '3', '3'), ('user3', '5', '5'), ('user3', '6', '5');
