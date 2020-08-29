@@ -125,7 +125,7 @@ def model_updater():
         generateModel(
             embedding_dim=30,
             init_stddev=1,
-            num_iterations=1000,
+            num_iterations=1500,
             learning_rate=0.03,
             verbosity=1
         )

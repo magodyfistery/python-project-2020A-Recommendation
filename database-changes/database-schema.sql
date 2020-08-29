@@ -203,6 +203,9 @@ ALTER TABLE `user_view_news` CHANGE `date_view` `date_view` DATETIME NOT NULL DE
 
 
 
+/*
+Cambios por: Danny Díaz 29-08-2020
+Nota: Fin de noticias
+*/
 
-
-
+ALTER TABLE `user_view_news` DROP PRIMARY KEY, ADD PRIMARY KEY(id_news, username_user, date_view);

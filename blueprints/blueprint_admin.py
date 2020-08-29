@@ -8,6 +8,7 @@ from werkzeug.utils import secure_filename
 from database import Database
 from models.category import Category
 from models.country import Country
+from models.news import News
 from models.order_details import OrderDetails
 from models.orders import Order
 from models.product import Product
@@ -102,6 +103,16 @@ def get_products():
     output = {'products': [json.loads(product.toJSON()) for product in products]}
     return jsonify(output)
 
+@admin_page.route('/api/get_news', methods=['POST'])  # si se usa por más de un blueprint, debería estar en app.py
+@admin_guard
+def get_news():
+    data = request.form
+    skip_news = data['skip_news']
+    step_news = data['step_news']
+    news = News.select_news(connection, skip_news, step_news)
+    output = {'news': [json.loads(new.toJSON()) for new in news]}
+    return jsonify(output)
+
 @admin_page.route('/api/get_orders', methods=['POST'])  # si se usa por más de un blueprint, debería estar en app.py
 @admin_guard
 def get_orders():
@@ -134,6 +145,16 @@ def addProduct():
                            categories=Category.select_categories(connection)
                            )
 
+@admin_page.route('/admin/panel/addNew')
+@admin_guard
+def addNew():
+    data = request.form
+
+    print(data)
+    return render_template("module_admin/add_new.html",
+                           logged_in=True,
+                           categories=News.select_news_categories(connection)
+                           )
 
 
 @admin_page.route('/admin/panel/updateProduct/<int:id_product>/<int:id_category>/<string:name>/<regex("\d+(\.\d+)?"):price>/<regex(".*"):img_path>')
@@ -148,7 +169,19 @@ def updateProduct(id_product, id_category, name, price, img_path):
                            )
 
 
+@admin_page.route('/admin/panel/updateNew', methods=['GET', 'POST'])
+@admin_guard
+def updateNew():
+    data = request.form
 
+    print(data)
+
+
+    return render_template("module_admin/update_new.html",
+                           logged_in=True,
+                           categories=News.select_news_categories(connection),
+                           new=data
+                           )
 
 
 def allowed_file(filename):
@@ -175,6 +208,24 @@ def saveProductInDatabase():
         else:
             flash("Error while executing command to database")
             return redirect(url_for('.addProduct'))
+
+
+@admin_page.route('/api/add_new', methods=['GET', 'POST'])
+@admin_guard
+def saveNewInDatabase():
+
+    data = request.form
+    split_category = data['category'].split("-")
+    id_category = int(split_category[0])
+    category_name = split_category[1].lower()
+
+    new = News()
+
+    if new.create(connection):
+        return redirect('/admin/panel')
+    else:
+        flash("Error while executing command to database")
+        return redirect(url_for('.addNew'))
 
 
 @admin_page.route('/api/update_product', methods=['GET', 'POST'])
