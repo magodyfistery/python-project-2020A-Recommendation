@@ -29,12 +29,15 @@
      <button class="btn btn-primary button-panel" id="button_users">
         Users
     </button>
+     <button class="btn btn-primary button-panel" id="button_news" style="display: none;">
+        News
+    </button>
 </div>
 
 <div id="div_products" style="display: none;">
 
     <br><br>
-    <button class="btn btn-primary" onclick="addProduct">
+    <button class="btn btn-primary">
         <a href="/admin/panel/addProduct" style="color: white;">
            Add product
         </a>
@@ -103,6 +106,36 @@
         Show more
     </button>
 </div>
+
+<div class="center" id="div_news" style="display: none;">
+
+    <br><br>
+    <button class="btn btn-primary">
+        <a href="/admin/panel/addNew" style="color: white;">
+           Add new
+        </a>
+    </button><br><br>
+
+    <table id="table_news" class="center table  table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th> ID </th>
+                <th> Author </th>
+                <th> Publish Date </th>
+                <th> Title </th>
+                <th> Description </th>
+                <th> url </th>
+                <th> Id category </th>
+
+            </tr>
+        </thead>
+    </table>
+
+     <button class="btn btn-primary" id="show_more_news">
+        Show more
+    </button>
+</div>
+
 
 
 <script charset="utf-8" type="text/javascript" src="../static/js_scripts/panel.js">
