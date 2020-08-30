@@ -16,7 +16,7 @@ class UserProductRating(Serializable):
             cursor.execute(sql1)
             rating = cursor.fetchone()
             if not rating:
-                sql2 = "INSERT INTO user_product_rating VALUES ('{user}',{id_product},NULL,0)".format(user=userproductrating.username_user,id_product=userproductrating.id_product)
+                sql2 = "INSERT INTO user_product_rating VALUES ('{user}',{id_product},NULL)".format(user=userproductrating.username_user,id_product=userproductrating.id_product)
                 try:
                     cursor.execute(sql2)
                     connection.commit()

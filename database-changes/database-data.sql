@@ -21,6 +21,7 @@ insert into product values (0,3,'Smartphone1',199.99,'images/smartphones/5.png',
 insert into product values (0,3,'Smartphone2',159.99,'images/smartphones/6.png',0);
 insert into product values (0,1,'Computer3',699.99,'images/computers/7.png',0);
 insert into product values (0,1,'Computer4',799.99,'images/computers/8.png',0);
+insert into product values (0,1,'Computer444',799.99,'images/computers/8.png',0);
 
 ---------------------------COUNTRY-------------------------
 INSERT INTO `country` (`id`, `name`) VALUES (NULL, 'Ecuador'), (NULL, 'United States');
@@ -108,4 +109,4 @@ insert into order_details values (0,3,7,500,3999.90);
 
 
 ---------------------------USER_PRODUCT_RATING-------------------------
-INSERT INTO `user_product_rating` (`username_user`, `id_product`, `rating`, `id_processing_status`) VALUES ('user1', '1', '5', '1'), ('user1', '7', '4', '1'), ('user1', '3', '2', '1'), ('user2', '5', '2', '1'), ('user2', '4', '5', '1'), ('user2', '6', '4', '1'), ('user3', '3', '3', '1'), ('user3', '5', '5', '1'), ('user3', '6', '5', '1')
+INSERT INTO `user_product_rating` (`username_user`, `id_product`, `rating`) VALUES ('user1', '1', '5'), ('user1', '7', '4'), ('user1', '3', '2'), ('user2', '5', '2'), ('user2', '4', '5'), ('user2', '6', '4'), ('user3', '3', '3'), ('user3', '5', '5'), ('user3', '6', '5');

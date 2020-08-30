@@ -8,4 +8,4 @@ class Config:
 
         self.id_items = None
 
-        self.model_path = os.path.join('matrix_factorization_system\\model', data_name + '.model')
+        self.model_path = os.path.join('matrix_factorization_system/model', data_name + '.model')

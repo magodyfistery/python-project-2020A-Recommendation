@@ -1,9 +1,11 @@
 
 import pandas as pd
+import numpy as np
 from flask import jsonify
 
 from database import Database
 from models.product import Product
+from models.city import City
 from utils.similarity_measures import *
 from utils.console_functions import log
 import pickle
@@ -149,7 +151,7 @@ def get_total_sources(candidates, user_id, with_rated=False, verbosity=1):
 def get_sparse_matrix_ratings():
     connection = Database.getConnection()
 
-    sql = "SELECT u.id, r.id_product, r.rating FROM user_product_rating as r, user as u WHERE u.username = r.username_user AND id_processing_status=1"
+    sql = "SELECT u.id, r.id_product, r.rating FROM user_product_rating as r, user as u WHERE u.username = r.username_user"
 
 
     ratings = pd.read_sql(sql, connection)
@@ -171,5 +173,88 @@ def get_sparse_matrix_ratings():
         for j in range(len(sparse_matrix[0])):
             print("%.1f" % sparse_matrix[i][j], end="    ")
         print()
+    #Asumiendo que los productos siempre estarán en orden de id y que no habrá brecha entre id's.
+    #Uso un diccionario de estilo {'user_id1':[],'user_id2':[]}
+    b = {}
+    i=1
+    for item in sparse_matrix:
+        b[str(i)]=item
+        i += 1
 
-    return sparse_matrix
+    return b
+
+def grs(user_id):
+    allusers = get_sparse_matrix_ratings()
+    print('####INICIO########')
+    print(allusers)
+    connection = Database.getConnection()
+    cities = City.select_user_cities(connection)
+    user_cities = City.select_alluser_cities(connection)  # [[user_id,user_city_name],...]
+    groups = {c:{} for c in cities}
+    for city in cities:
+        for item in user_cities:
+            if item.name == city:
+                groups[city][str(item.id_country)]=allusers[str(item.id_country)]
+    print(groups)
+    city = City.check_user_city(connection,user_id)
+    if city:
+        grupo = groups[city]
+        #Aditive Utilitarian Strategy
+        print("#########ADITIVE#######")
+        suma = np.zeros(len(grupo[str(user_id)]))# Si pasa el check_user_city, user_id existe en grupo
+        for k,v in grupo.items():
+            suma = suma + v
+        print(suma)
+        print(-np.sort(-(np.argpartition(suma,-6)[-6:]+1)))
+        suma = (-np.sort(-(np.argpartition(suma,-6)[-6:]+1)))
+        #Multiplicative Utilitarian Strategy
+        print("#########MULTIPLICATIVE#######")
+        mult = np.ones(len(grupo[str(user_id)]))
+        for k,v in grupo.items():
+            varr = np.array(v)
+            varr[varr==0]=1
+            mult = mult * varr
+        print(mult)
+        print(-np.sort(-(np.argpartition(mult,-3)[-3:]+1)))
+        mult = (-np.sort(-(np.argpartition(mult,-3)[-3:]+1)))
+        #Least Misery Strategy
+        print("#########LEAST MISERY#######")
+        least = np.array(grupo[str(user_id)])
+        least[least==0]=1
+        for k,v in grupo.items():
+            varr = np.array(v)
+            varr[varr==0]=1
+            i=0
+            for x in least:
+                if varr[i]<=x:
+                    least[i]=varr[i]
+                i+=1
+        print(least)
+        print(-np.sort(-(np.argpartition(least,-3)[-3:]+1)))
+        least = (-np.sort(-(np.argpartition(least,-3)[-3:]+1)))
+        #Most Pleasure
+        print("#########MOST PLEASURE#######")
+        most = np.array(grupo[str(user_id)])
+        for k,v in grupo.items():
+            varr = np.array(v)
+            i=0
+            for x in most:
+                if varr[i]>x:
+                    most[i]=varr[i]
+                i+=1
+        print(most)
+        print(-np.sort(-(np.argpartition(most,-3)[-3:]+1)))
+        most = (-np.sort(-(np.argpartition(most,-3)[-3:]+1)))
+        recommendations = []
+        if np.in1d(mult,most).any():#Mando otra lista si existe repetidos entre mult y most.
+            for x in suma:
+                recommendations.append(Product.get_product(connection,x))
+        else:
+            for x in mult:
+                recommendations.append(Product.get_product(connection,x))
+            for y in most:
+                recommendations.append(Product.get_product(connection,y))
+        return recommendations
+    else:
+        return None
+    

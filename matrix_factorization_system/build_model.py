@@ -111,7 +111,7 @@ def generateModel(embedding_dim=30, init_stddev=1, num_iterations=500, learning_
 
     connection = Database.getConnection()
 
-    sql = "SELECT u.id, r.id_product, r.rating FROM user_product_rating as r, user as u WHERE u.username = r.username_user AND id_processing_status=1"
+    sql = "SELECT u.id, r.id_product, r.rating FROM user_product_rating as r, user as u WHERE u.username = r.username_user"
 
     try:
         ratings = pd.read_sql(sql, connection)

@@ -169,12 +169,35 @@ Nota: Panel de administración con roles
 CREATE TABLE `shop`.`role` ( `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , `name` VARCHAR(32) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
 CREATE TABLE `shop`.`user_role` ( `id_role` INT UNSIGNED NOT NULL , `username_user` VARCHAR(30) NOT NULL , INDEX (`id_role`), INDEX (`username_user`)) ENGINE = InnoDB;
 ALTER TABLE `user_role` ADD CONSTRAINT `fk_user_role_role` FOREIGN KEY (`id_role`) REFERENCES `role`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE; ALTER TABLE `user_role` ADD CONSTRAINT `fk_user_role_user` FOREIGN KEY (`username_user`) REFERENCES `user`(`username`) ON DELETE RESTRICT ON UPDATE CASCADE;
-ALTER TABLE `user_role` ADD PRIMARY KEY(id_role, username_user)
+ALTER TABLE `user_role` ADD PRIMARY KEY(id_role, username_user);
 
 ALTER TABLE `product` CHANGE `product_name` `product_name` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL, CHANGE `price` `price` FLOAT(10,2) NULL DEFAULT '0', CHANGE `avgrating` `avgrating` FLOAT(2,1) NULL DEFAULT '0';
 
 
+/*
+Cambios por: Ronny Jaramillo 28-08-2020
+Nota: Eliminación de la tabla 'processing_status' y todos las las referencias de sus campos que se tengan en otras tablas.
+*/
+DROP TABLE processing_status;
 
+DROP TABLE user_product_rating;
+
+CREATE TABLE user_product_rating(
+    username_user varchar(30) NOT NULL,
+    id_product int NOT NULL,
+    rating float(3,2)
+);
+ALTER TABLE `user_product_rating` ENGINE = INNODB;
+
+ALTER TABLE `user_product_rating` ADD INDEX(`username_user`);
+ALTER TABLE `user_product_rating` ADD INDEX(`id_product`);
+
+ALTER TABLE `user_product_rating` ADD CONSTRAINT `fk_rating_user` FOREIGN KEY (`username_user`) REFERENCES `user`(`username`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `user_product_rating` ADD CONSTRAINT `fk_rating_product` FOREIGN KEY (`id_product`) REFERENCES `product`(`id_product`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+/* Si al irse al template 'my_account', no aparece nada en pantalla y aparece un error en el log
+acerca de SQL que diga ONLY_FULL_GROUP_BY, ejecutar esta línea en la base de datos.*/
+SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
 /*
 Cambios por: Danny Díaz 26-08-2020
 Nota: Inicio de noticias
