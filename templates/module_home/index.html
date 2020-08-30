@@ -3,6 +3,11 @@
 
 {% block head %}
 <title> Inicio </title>
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/estilos.css') }}">
+
+
+
+
 {% endblock %}
 
 
@@ -17,71 +22,114 @@
 
 {% if not logged_in %}
 
-<!-- Best Sellers -->
-  <div class="container mb-5">
-      <h3 class="mb-2"><strong>Best Sellers</strong></h3>
-      <div class="row">
+<div class="container_multiple_box center_horizontal">
 
-        {% for x in prods %}
-        <div class ="col-sm">
-            <div class="shop-item">
-                <a href="/product?view={{x.id_product}}"><img width="223px" src= {{ url_for('static', filename = '') }}{{x.img_path}}></a>
-                <div>
-                    <a href="/product?view={{x.id_product}}">{{x.name}}</a>
-                </div>
-                <div>
-                    <a href="/product?view={{x.id_product}}">{{x.price}}</a>
-                </div>
-                <div>
-                    {% for y in range(x.avgrating|int) %}
-                    <span class="fa fa-star checked text-warning"></span>
-                    {% endfor %}
-                    {%for z in range(5-(x.avgrating|int))%}
-                    <span class="fa fa-star"></span>
-                    {% endfor %}
+    <!-- Best Sellers -->
+    <div class="container mb-5 box_inside">
+          <h3 class="mb-2"><strong>Best Sellers</strong></h3>
+          <div class="row">
+
+            {% for x in prods %}
+            <div class ="col-sm">
+                <div class="shop-item">
+                    <a href="/product?view={{x.id_product}}"><img width="223px" src= {{ url_for('static', filename = '') }}{{x.img_path}}></a>
+                    <div>
+                        <a href="/product?view={{x.id_product}}">{{x.name}}</a>
+                    </div>
+                    <div>
+                        <a href="/product?view={{x.id_product}}">{{x.price}}</a>
+                    </div>
+                    <div>
+                        {% for y in range(x.avgrating|int) %}
+                        <span class="fa fa-star checked text-warning"></span>
+                        {% endfor %}
+                        {%for z in range(5-(x.avgrating|int))%}
+                        <span class="fa fa-star"></span>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
-        </div> 
-        {% endfor %}
+            {% endfor %}
 
-      </div>
-  </div>
-
-
-  {% else %}
-
-
-<!-- Personalized Recommendations -->
-<div class="container mb-5">
-    <h3 class="mb-2"><strong>Recommended for you</strong></h3>
-    <div class="row">
-      {% for x in recp %}
-      <div class ="col-md-4 col-sm-6 col-xs-12">
-          <div class="shop-item">
-              <a href="/product?view={{x.id_product}}"><img width="223px" src= {{ url_for('static', filename = '') }}{{x.img_path}}></a>
-              <div>
-                  <a href="/product?view={{x.id_product}}">{{x.name}}</a>
-              </div>
-              <div>
-                  <a href="/product?view={{x.id_product}}">{{x.price}}</a>
-              </div>
-              <div>
-                  {% for y in range(x.avgrating|int) %}
-                  <span class="fa fa-star checked text-warning"></span>
-                  {% endfor %}
-                  {%for z in range(5-(x.avgrating|int))%}
-                  <span class="fa fa-star"></span>
-                  {% endfor %}
-              </div>
           </div>
-      </div> 
-      {% endfor %}
     </div>
+
+    <div class="container news">
+          <h3 class="mb-2"><strong>News</strong></h3>
+          <div class="col">
+              {% for new in news %}
+                <div class="div_new">
+                    <button onclick="viewNew({{new.id}}, -1, '{{new.url}}' )" style="width: 100%;">
+
+                        <span><b>{{new.title}}</b></span> <br>
+                        <p style="font-size: 10px;">{{new.description}}</p>
+
+                    </button>
+                </div>
+              {% endfor %}
+          </div>
+    </div>
+
+
 </div>
 
 
-<!-- Group Recommendations -->
 
+
+{% else %}
+
+<div class="container_multiple_box center_horizontal">
+
+    <!-- Personalized Recommendations -->
+    <div class="container mb-5 box_inside">
+        <h3 class="mb-2"><strong>Recommended for you</strong></h3>
+        <div class="row">
+          {% for x in recp %}
+          <div class ="col-md-4 col-sm-6 col-xs-12">
+              <div class="shop-item">
+                  <a href="/product?view={{x.id_product}}"><img width="223px" src= {{ url_for('static', filename = '') }}{{x.img_path}}></a>
+                  <div>
+                      <a href="/product?view={{x.id_product}}">{{x.name}}</a>
+                  </div>
+                  <div>
+                      <a href="/product?view={{x.id_product}}">{{x.price}}</a>
+                  </div>
+                  <div>
+                      {% for y in range(x.avgrating|int) %}
+                      <span class="fa fa-star checked text-warning"></span>
+                      {% endfor %}
+                      {%for z in range(5-(x.avgrating|int))%}
+                      <span class="fa fa-star"></span>
+                      {% endfor %}
+                  </div>
+              </div>
+          </div>
+          {% endfor %}
+        </div>
+    </div>
+
+    <div class="container news" style="border: 2px solid blue;">
+          <h3 class="mb-2"><strong>News</strong></h3>
+          <div class="col">
+              {% for new in news %}
+                <div class="div_new">
+                    <button onclick="viewNew({{new.id}}, '{{user.username}}', '{{new.url}}')" style="width: 100%;">
+
+                        <span><b>{{new.title}}</b></span> <br>
+                        <p style="font-size: 10px;">{{new.description}}</p>
+
+                    </button>
+                </div>
+              {% endfor %}
+          </div>
+    </div>
+
+
+</div>
+
+<br>
+
+<!-- Group Recommendations -->
 <div class="container mb-5">
     <h3 class="mb-2"><strong>Based on your location</strong></h3>
     <div class="row">
@@ -104,11 +152,10 @@
                   {% endfor %}
               </div>
           </div>
-      </div> 
+      </div>
       {% endfor %}
     </div>
 </div>
-
 <!-- User Favorite Category -->
 {% if cat %}
 <div class="container text-center">
@@ -121,12 +168,16 @@
                 </h5>
                 <a href="/category/{{cat.category_name}}"><img width="223px" src="static/images/categories/{{cat.category_name}}.png"></a>
             </div>
-        </div> 
+        </div>
       </div>
   </div>
 {% endif %}
 
 {% endif %}
+
+
+<hr>
+
 
 <!-- All Categories -->
   <div class="container">
@@ -146,8 +197,6 @@
   </div>
 
 
-
-  
 <!-- Top Rated Products -->
   <div class="container mb-5">
       <h3 class="mb-2"><strong>Top Rated</strong></h3>
@@ -176,6 +225,35 @@
       </div>
   </div>
 
+
+
+
+<script charset="utf-8" type="text/javascript">
+
+    function viewNew(id_new, username_user, url) {
+
+        if(username_user != -1){
+
+            var send = {
+              id_news: id_new,
+              username_user: username_user
+            };
+
+            $.getJSON("/api/news_interact", send, function(response) {
+                  // we will need to add a handler for this in Flask
+
+
+                  console.log("Respuesta recibida de: /api/news_interact", response);
+
+
+              });
+
+        }
+
+        window.open(url);
+
+    }
+</script>
  
 {% endblock %}
 

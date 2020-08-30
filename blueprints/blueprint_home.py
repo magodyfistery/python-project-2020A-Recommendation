@@ -1,10 +1,12 @@
 import json
+from datetime import date, timedelta
 
 from flask import Blueprint, session, render_template
 
 from database import Database
 from matrix_factorization_system.recommendations import user_candidate_generation, get_total_sources, grs
 from models.category import Category
+from models.news import News
 from models.product import Product
 
 
@@ -16,6 +18,9 @@ home_page = Blueprint('home_page', __name__, template_folder='templates')
 def show_home():
     user_data = session.get('user_data', None)
     logged_in = session.get('logged_in', False)
+
+    today = date.today() - timedelta(days=30)
+    print("Today-delta", today)
 
     if logged_in:
         user = json.loads(user_data)
@@ -39,10 +44,11 @@ def show_home():
                             user=user,
                             categories=Category.select_categories(connection),
                             prods=Product.select_best_sellers(connection, 3),
-                            topr=Product.select_top_rated(connection,5),
+                            topr=Product.select_top_rated(connection, 5),
                             recp=recp,
                             recg = recg,
-                            cat = Category.get_user_top_category(connection,json.loads(user_data)['username'])
+                            cat = Category.get_user_top_category(connection,json.loads(user_data)['username']),
+                            news = News.get_recommended_news(connection, today.strftime("%Y-%m-%d"), json.loads(user_data)['username'])
                             )
     else:
         return render_template("module_home/index.html",
@@ -50,5 +56,6 @@ def show_home():
                             categories=Category.select_categories(connection),
                             prods=Product.select_best_sellers(connection, 3),
                             topr=Product.select_top_rated(connection,5),
+                            news = News.get_news_from_date(connection, today.strftime("%Y-%m-%d"))
                             )
 
