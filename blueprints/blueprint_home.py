@@ -25,7 +25,7 @@ def show_home():
         with_rated = False
         print("User id para recomendaciones", user_id)
         candidate_generation = user_candidate_generation(user_id, "id", "id_product")
-        total_sources = get_total_sources(candidate_generation, user_id, with_rated=with_rated, verbosity=1)
+        total_sources = get_total_sources(candidate_generation, user_id, with_rated=with_rated, verbosity=0)
         # las recomendaciones ya vienen ordenadas del mayor puntaje al menor
         recp = total_sources[0:quantity_recommendations]  # Aquí se enviará la lista de productos de recomendaciones personalizadas.
         res = grs(user_id)

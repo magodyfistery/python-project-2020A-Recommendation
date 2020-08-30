@@ -246,7 +246,7 @@ def grs(user_id):
         print(-np.sort(-(np.argpartition(most,-3)[-3:]+1)))
         most = (-np.sort(-(np.argpartition(most,-3)[-3:]+1)))
         recommendations = []
-        if np.in1d(mult,most).any():
+        if np.in1d(mult,most).any():#Mando otra lista si existe repetidos entre mult y most.
             for x in suma:
                 recommendations.append(Product.get_product(connection,x))
         else:

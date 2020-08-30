@@ -5,6 +5,7 @@ from database import Database
 from models.product import Product
 from models.category import Category
 from models.user_product_rating import UserProductRating
+from matrix_factorization_system.recommendations import user_candidate_generation, get_total_sources, grs
 connection = Database.getConnection()
 product = Blueprint('product', __name__, template_folder='templates')
 
@@ -17,17 +18,29 @@ def get_product():
         id=request.args['view']
         product = Product.get_product(connection,id)
         if logged_in:
-            recp = Product.select_best_sellers(connection, 6) # Recomendaciones personalizadas.
-            recg = Product.select_best_sellers(connection, 6) # Recomendaciones de grupo.
+            user = json.loads(user_data)
+            user_id = user['id']
+            quantity_recommendations = 6
+            with_rated = False
+            print("User id para recomendaciones", user_id)
+            candidate_generation = user_candidate_generation(user_id, "id", "id_product")
+            total_sources = get_total_sources(candidate_generation, user_id, with_rated=with_rated, verbosity=0)
+            recp = total_sources[0:quantity_recommendations]  # Aquí se enviará la lista de productos de recomendaciones personalizadas.
+            res = grs(user_id)
+            if res:
+                recg = res
+            else:
+                recg = Product.select_best_sellers(connection, 6)
             return render_template("module_home/product.html", logged_in =logged_in, 
                                 user=json.loads(user_data) if user_data else None,
                                 product = product,
                                 recp=recp,
-                                recg=recg)
+                                recg=recg,
+                                similar=Product.select_similar_products(connection,product.id_product,product.id_category,3))
         else:
             return render_template("module_home/product.html", logged_in =logged_in, 
                                 product = product,
-                                similar=Product.select_similar_products(connection,product.id_product,product.id_category,1))
+                                similar=Product.select_similar_products(connection,product.id_product,product.id_category,3))
 @product.route("/search")
 def search_results():
     if 'q' in request.args:
@@ -35,8 +48,19 @@ def search_results():
         user_data = session.get('user_data', None)
         logged_in = session.get('logged_in', False)
         if logged_in:
-            recp = Product.select_best_sellers(connection, 6) # Recomendaciones personalizadas.
-            recg = Product.select_best_sellers(connection, 6) # Recomendaciones de grupo.
+            user = json.loads(user_data)
+            user_id = user['id']
+            quantity_recommendations = 6
+            with_rated = False
+            print("User id para recomendaciones", user_id)
+            candidate_generation = user_candidate_generation(user_id, "id", "id_product")
+            total_sources = get_total_sources(candidate_generation, user_id, with_rated=with_rated, verbosity=0)
+            recp = total_sources[0:quantity_recommendations]  # Aquí se enviará la lista de productos de recomendaciones personalizadas.
+            res = grs(user_id)
+            if res:
+                recg = res
+            else:
+                recg = Product.select_best_sellers(connection, 6)
             return render_template("module_home/search.html", 
                                     logged_in=logged_in, 
                                     prods= prods,

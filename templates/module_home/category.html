@@ -27,7 +27,7 @@
       {% for x in prods %}
       <div class ="col-md-4 col-sm-6 col-xs-12">
           <div class="shop-item">
-              <a href="/product?view={{x.id_product}}"><img width="223px" src= {{ url_for('static', filename = '') }}{{x.img_path}}></a>
+              <a href="/product?view={{x.id_product}}"><img height="150px" width="230px" src= {{ url_for('static', filename = '') }}{{x.img_path}}></a>
               <div>
                   <a href="/product?view={{x.id_product}}">{{x.name}}</a>
               </div>
