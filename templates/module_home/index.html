@@ -32,7 +32,7 @@
             {% for x in prods %}
             <div class ="col-sm">
                 <div class="shop-item">
-                    <a href="/product?view={{x.id_product}}"><img width="223px" src= {{ url_for('static', filename = '') }}{{x.img_path}}></a>
+                    <a href="/product?view={{x.id_product}}"><img width="223px" height="145px" src= {{ url_for('static', filename = '') }}{{x.img_path}}></a>
                     <div>
                         <a href="/product?view={{x.id_product}}">{{x.name}}</a>
                     </div>
@@ -87,7 +87,7 @@
           {% for x in recp %}
           <div class ="col-md-4 col-sm-6 col-xs-12">
               <div class="shop-item">
-                  <a href="/product?view={{x.id_product}}"><img width="223px" src= {{ url_for('static', filename = '') }}{{x.img_path}}></a>
+                  <a href="/product?view={{x.id_product}}"><img width="223px" height="145px" src= {{ url_for('static', filename = '') }}{{x.img_path}}></a>
                   <div>
                       <a href="/product?view={{x.id_product}}">{{x.name}}</a>
                   </div>
@@ -136,7 +136,7 @@
       {% for x in recg %}
       <div class ="col-md-4 col-sm-6 col-xs-12">
           <div class="shop-item">
-              <a href="/product?view={{x.id_product}}"><img width="223px" src= {{ url_for('static', filename = '') }}{{x.img_path}}></a>
+              <a href="/product?view={{x.id_product}}"><img width="223px" height="145px" src= {{ url_for('static', filename = '') }}{{x.img_path}}></a>
               <div>
                   <a href="/product?view={{x.id_product}}">{{x.name}}</a>
               </div>
@@ -166,7 +166,7 @@
                 <h5>
                     {{ cat.category_name }}
                 </h5>
-                <a href="/category/{{cat.category_name}}"><img width="223px" src="static/images/categories/{{cat.category_name}}.png"></a>
+                <a href="/category/{{cat.category_name}}"><img width="223px" height="145px" src="static/images/categories/{{cat.category_name}}.png"></a>
             </div>
         </div>
       </div>
@@ -189,7 +189,7 @@
                 <h5>
                     {{ x['category_name'] }}
                 </h5>
-                <a href="/category/{{x['category_name']}}"><img width="223px" src="static/images/categories/{{x['category_name']}}.png"></a>
+                <a href="/category/{{x['category_name']}}"><img width="223px" height="145px" src="static/images/categories/{{x['category_name']}}.png"></a>
             </div>
         </div> 
 		{% endfor %}
@@ -204,7 +204,7 @@
         {% for x in topr %}
         <div class ="col-md-4 col-sm-6 col-xs-12">
             <div class="shop-item">
-                <a href="/product?view={{x.id_product}}"><img width="223px" src= {{ url_for('static', filename = '') }}{{x.img_path}}></a>
+                <a href="/product?view={{x.id_product}}"><img width="223px" height="145px" src= {{ url_for('static', filename = '') }}{{x.img_path}}></a>
                 <div>
                     <a href="/product?view={{x.id_product}}">{{x.name}}</a>
                 </div>
