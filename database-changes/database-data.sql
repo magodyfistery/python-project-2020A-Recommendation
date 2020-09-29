@@ -54,7 +54,11 @@ INSERT INTO `country` (`id`, `name`) VALUES (NULL, 'Ecuador'), (NULL, 'United St
 
 ---------------------------CITY-------------------------
 INSERT INTO `city` (`id_country`, `name`) VALUES ('1', 'Quito'), ('1', 'Guayaquil');
+INSERT INTO `city` (`id_country`, `name`) VALUES ('1', 'Cuenca'), ('1', 'Loja');
+INSERT INTO `city` (`id_country`, `name`) VALUES ('1', 'Ambato'), ('1', 'Ibarra');
 INSERT INTO `city` (`id_country`, `name`) VALUES ('2', 'Boston'), ('2', 'New York');
+INSERT INTO `city` (`id_country`, `name`) VALUES ('2', 'Salt Lake City'), ('2', 'Detroit');
+INSERT INTO `city` (`id_country`, `name`) VALUES ('2', 'Chicago'), ('2', 'New Jersey');
 
 
 ---------------------------ROLE-------------------------
