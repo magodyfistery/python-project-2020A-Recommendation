@@ -1,7 +1,13 @@
-Python GR-1 2020-A  
-Díaz Danny  
-Jaramillo Ronny  
-python-project-2020A-Recommendation  
+# Python GR-1 2020-A  
+## Díaz Danny  
+## Jaramillo Ronny  
+### python-project-2020A-Recommendation  
+
+Tecnologías:
+[X] Flask
+[X] Tensorflow
+[X] Pandas
+[X] MySQL
 
 Indicaciones:  
 - El proyecto requiere de las siguientes librerías para ser ejecutado:  
@@ -11,5 +17,5 @@ Pymysql (latest version as of 30-Sep-2020)
 Python: 3.6  
 Tensorflow: 1.14.0  
   
-
+Nota:  
 ctrl + shift + R para recarcar la página sin caché en desarrollo
